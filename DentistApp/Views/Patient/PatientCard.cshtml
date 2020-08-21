@@ -1,0 +1,64 @@
+﻿@model DentistApp.Application.ViewModels.PatientCardVM
+
+@{
+    ViewData["Title"] = "PatientCard";
+}
+
+<h1>PatientCard</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="row">
+    <div class="col-auto">
+        <h3>Dane Pacjenta</h3>
+        <h5>@Html.DisplayFor(model => Model.Patient.Name)</h5>
+        <h5>@Html.DisplayFor(model => Model.Patient.LastName)</h5>
+        <h5>@Html.DisplayFor(model => Model.Patient.PESEL)</h5>
+        <h5>@Html.DisplayFor(model => Model.Patient.BirthDate)</h5>
+        <h5>@Html.DisplayFor(model => Model.Patient.PhoneNumber)</h5>
+    </div>
+    <div class="col-auto">
+        <h3>Adres Pacjenta</h3>
+        <h5>@Html.DisplayFor(model => Model.Address.Building)</h5>
+        <h5>@Html.DisplayFor(model => Model.Address.Apartment)</h5>
+        <h5>@Html.DisplayFor(model => Model.Address.Street)</h5>
+        <h5>@Html.DisplayFor(model => Model.Address.PostalCode)</h5>
+        <h5>@Html.DisplayFor(model => Model.Address.City)</h5>
+    </div>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+          
+            <th>
+                Data
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Visits) {
+        <tr>
+       
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitStatus)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

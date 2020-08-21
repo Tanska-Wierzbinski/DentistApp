@@ -1,0 +1,70 @@
+﻿@model DentistApp.Application.ViewModels.VisitForDateListVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="row">
+    <div class="col-auto">
+       <h4> @Html.DisplayFor(model => Model.CurrentDate)</h4>
+    </div>
+    
+    <div class="col-auto">
+        <h4>Ilość wizyt: @Html.DisplayFor(model => Model.Count)</h4>
+    </div>
+    <div class="col-auto">
+        <h4>Ilość zakończonych wizyt: @Html.DisplayFor(model => Model.DoneVisits)</h4>
+    </div>
+
+</div>
+<table class="table">
+    <thead>
+        <tr>
+              
+                <th>
+                    Data
+                </th>
+                <th>
+                    Imię i Nazwisko
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Gabinet
+                </th>
+               
+                <th></th>
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Visits)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitOffice)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
