@@ -89,7 +89,7 @@ namespace DentistApp.Application.Services
         {
             var patient = _mapper.Map<PatientDetailsVM>(_patientRepository.GetById(patientId));
             var address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
-            var visits = _visitRepository.GetForPatient(patientId).ProjectTo<VisitVM>(_mapper.ConfigurationProvider);
+            var visits = _visitRepository.GetForPatient(patientId).ProjectTo<VisitBasicInfoVM>(_mapper.ConfigurationProvider);
             return new PatientCardVM()
             {
                 Patient = patient,

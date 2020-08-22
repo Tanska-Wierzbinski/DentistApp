@@ -8,7 +8,7 @@ using static DentistApp.Application.Mapping.IMapFrom;
 
 namespace DentistApp.Application.ViewModels
 {
-    public class VisitVM : IMapFrom<Visit>
+    public class VisitBasicInfoVM : IMapFrom<Visit>
     {
         public int Id { get; set; }
 
@@ -18,7 +18,7 @@ namespace DentistApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, VisitVM>().ReverseMap();
+            profile.CreateMap<Visit, VisitBasicInfoVM>().ReverseMap();
 
         }
     }

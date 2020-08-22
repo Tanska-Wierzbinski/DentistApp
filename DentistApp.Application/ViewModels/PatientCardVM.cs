@@ -10,7 +10,7 @@ namespace DentistApp.Application.ViewModels
     {
         public PatientDetailsVM Patient { get; set; }
         public AddressVM Address { get; set; }
-        public List<VisitVM> Visits { get; set; }
+        public List<VisitBasicInfoVM> Visits { get; set; }
 
     }
 }
