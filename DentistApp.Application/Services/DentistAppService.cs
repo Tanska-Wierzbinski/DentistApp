@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DentistApp.Application.Interfaces;
 using DentistApp.Application.ViewModels;
 using DentistApp.Domain.Interfaces;
+using DentistApp.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,6 @@ namespace DentistApp.Application.Services
             _mapper = mapper;
         }
 
-        public Task AddVisit()
-        {
-            throw new NotImplementedException();
-        }
 
         public Task EditVisit()
         {
@@ -96,6 +93,42 @@ namespace DentistApp.Application.Services
                 Address = address,
                 Visits = visits.ToList()
             };
+        }
+
+        public TempVisitVM AddVisit_Get(DateTime date, int? dentistId)
+        {
+            var dentists = _dentistRepository.GetAll().ProjectTo<DentistBasicInfo>(_mapper.ConfigurationProvider);
+            var patients = _patientRepository.GetAll().ProjectTo<PatientBasicInfo>(_mapper.ConfigurationProvider);
+            var bookedVisits = new List<DateTime>();
+
+            if (dentistId == null)
+            {
+               bookedVisits = _visitRepository.GetForDate(date)
+                                                .GroupBy(v => v.VisitDate)
+                                                .Where(v => v.Count() == dentists.Count())
+                                                .Select(v => v.Key).ToList();
+            }
+            else
+            {
+                bookedVisits = _visitRepository.GetForDate(date)
+                                                .Where(v => v.DentistId == dentistId)
+                                                .Select(v => v.VisitDate).ToList();
+            }
+            
+
+            return new TempVisitVM()
+            {
+                Dentists = dentists.ToList(),
+                Patients = patients.ToList(),
+                BookedVisits = bookedVisits,
+                VisitDate = date
+            };
+        }
+
+        public async Task AddVisit_Post(TempVisitVM tempVisit)
+        {
+            var visit = _mapper.Map<Visit>(tempVisit);
+            await _visitRepository.Add(visit);
         }
     }
 }

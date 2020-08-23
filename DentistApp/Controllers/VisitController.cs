@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DentistApp.Application.Interfaces;
+using DentistApp.Application.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,24 +33,18 @@ namespace DentistApp.Controllers
         }
 
         // GET: VisitController/Create
-        public ActionResult Create()
+        public ActionResult Create(DateTime date, int? dentistId)
         {
-            return View();
+            return View(_service.AddVisit_Get(date, dentistId));
         }
 
         // POST: VisitController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection, TempVisitVM tempVisit)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.AddVisit_Post(tempVisit);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: VisitController/Edit/5
