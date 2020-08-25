@@ -30,7 +30,7 @@ namespace DentistApp.Domain.Models
     {
         public int Id { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy/HH/mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
         public Office VisitOffice { get; set; }

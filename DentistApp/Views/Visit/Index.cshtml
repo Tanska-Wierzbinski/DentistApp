@@ -48,11 +48,16 @@
     <tbody>
 @foreach (var item in Model.Visits) {
         <tr>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Id)
+            </td>*@
+            <td>
+                @{ var date = item.VisitDate.ToString("dd/MM/yyyy");
+                @Html.DisplayFor(modelItem => date)}
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.VisitDate)
+                @{ var timeofday = item.VisitDate.ToString("HH:mm");
+                @Html.DisplayFor(modelItem => timeofday)}
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.VisitStatus)

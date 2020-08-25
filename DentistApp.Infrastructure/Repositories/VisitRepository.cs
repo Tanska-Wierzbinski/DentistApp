@@ -42,7 +42,11 @@ namespace DentistApp.Infrastructure.Repositories
        
         public IQueryable<Visit> GetForDate(DateTime date)
         {
-            return _context.Visits.Where(v => v.VisitDate.Equals(date)).Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
+            return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date)).Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
+        }
+        public IQueryable<Visit> GetForDateTime(DateTime date)
+        {
+            return _context.Visits.Where(v => v.VisitDate.Equals(date));//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
         }
 
         public IQueryable<Visit> GetForDentist(int dentistId)

@@ -13,6 +13,7 @@ namespace DentistApp.Domain.Interfaces
     {
         IQueryable<Visit> GetAll();
         IQueryable<Visit> GetForDate(DateTime date);
+        IQueryable<Visit> GetForDateTime(DateTime date);
         IQueryable<Visit> GetForPatient(int patientId);
         IQueryable<Visit> GetForDentist(int dentistId);
         Task<Visit> GetById(int visitId);

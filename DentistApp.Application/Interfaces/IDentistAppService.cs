@@ -12,8 +12,8 @@ namespace DentistApp.Application.Interfaces
     {
         VisitForDateListVM GetVisitsForDate(DateTime date);
         VisitDetailsListVM GetVisitsDetails();
-        TempVisitVM AddVisit_Get(DateTime date, int? dentistId);
-        Task AddVisit_Post(TempVisitVM tempVisit);
+        TempVisitVM AddVisit_Get(DateTime? date, int? dentistId);
+        Task<int> AddVisit_Post(TempVisitVM tempVisit);
         Task EditVisit();
         Task EditVisit(int idVisit);
         PatientListVM GetAllPatient();

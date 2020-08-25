@@ -33,8 +33,9 @@ namespace DentistApp.Controllers
         }
 
         // GET: VisitController/Create
-        public ActionResult Create(DateTime date, int? dentistId)
+        public ActionResult Create(DateTime? date, int? dentistId,string message)
         {
+            ViewBag.Message = message;
             return View(_service.AddVisit_Get(date, dentistId));
         }
 
@@ -43,7 +44,11 @@ namespace DentistApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection, TempVisitVM tempVisit)
         {
-            await _service.AddVisit_Post(tempVisit);
+            var return_value = await _service.AddVisit_Post(tempVisit);
+            if(return_value == 1)
+            {
+                return RedirectToAction(nameof(Create), new { message = "Ten pacjent ma już umówioną wizytę na tę godzinę", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId});
+            }
             return RedirectToAction(nameof(Index));
         }
 
