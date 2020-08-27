@@ -33,7 +33,7 @@ namespace DentistApp.Controllers
         }
 
         // GET: VisitController/Create
-        public ActionResult Create(DateTime? date, int? dentistId,string message)
+        public ActionResult Create(DateTime? date, int? dentistId, string message)
         {
             ViewBag.Message = message;
             return View(_service.AddVisit_Get(date, dentistId));
@@ -45,9 +45,9 @@ namespace DentistApp.Controllers
         public async Task<ActionResult> Create(IFormCollection collection, TemporaryVisitVM tempVisit)
         {
             var return_value = await _service.AddVisit_Post(tempVisit);
-            if(return_value == 1)
+            if (return_value == 1)
             {
-                return RedirectToAction(nameof(Create), new { message = "This patient already has visit at this time.", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId});
+                return RedirectToAction(nameof(Create), new { message = "This patient already has visit at this time.", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId });
             }
             return RedirectToAction(nameof(Index));
         }
@@ -55,7 +55,7 @@ namespace DentistApp.Controllers
         // GET: VisitController/Edit/5
         public ActionResult Edit(DateTime? date, int? dentistId, int id, string message)
         {
-            return View(_service.EditVisit_Get(date,dentistId,id));
+            return View(_service.EditVisit_Get(date, dentistId, id));
         }
 
         // POST: VisitController/Edit/5
@@ -83,11 +83,11 @@ namespace DentistApp.Controllers
         public async Task<ActionResult> AddOrEditDiagnosisAndProcedure(IFormCollection collection, VisitInfoForDetailsVM visit)
         {
             await _service.AddOrEditDiagnosisAndProcedure(visit);
-            return RedirectToAction(nameof(Details), new { id = visit.Id});
+            return RedirectToAction(nameof(Details), new { id = visit.Id });
         }
 
         // GET: VisitController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Cancel(int id)
         {
             return View();
         }
@@ -95,16 +95,11 @@ namespace DentistApp.Controllers
         // POST: VisitController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Cancel(int id, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction(nameof(Index));
+
         }
     }
 }
