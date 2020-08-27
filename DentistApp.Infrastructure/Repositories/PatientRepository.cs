@@ -33,12 +33,16 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Patient> GetAll()
         {
-            return _context.Patients;
+            return _context.Patients.AsNoTracking();
         }
 
         public Patient GetById(int patientId)
         {
             return _context.Patients.SingleOrDefault(v => v.Id == patientId);
+        }
+        public Patient GetByIdWithAddress(int patientId)
+        {
+            return _context.Patients.Include(p => p.Address).SingleOrDefault(v => v.Id == patientId);
         }
 
         public async Task Update(Patient patient)

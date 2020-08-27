@@ -4,8 +4,8 @@ using System.Text;
 
 namespace DentistApp.Application.ViewModels
 {
-    public class PatientListVM
+    public class PatientInfoForIndexListVM
     {
-        public List<PatientVM> Patients { get; set; }
+        public List<PatientInfoForIndexVM> Patients { get; set; }
     }
 }

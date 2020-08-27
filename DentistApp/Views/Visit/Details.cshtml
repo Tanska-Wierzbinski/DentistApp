@@ -1,0 +1,102 @@
+﻿@model DentistApp.Application.ViewModels.VisitInfoForDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+@*<div>
+    <h4>VisitInfoForDetailsVM</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VisitDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VisitDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VisitStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VisitStatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Diagnosis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Diagnosis)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Procedure)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Procedure)
+        </dd>
+    </dl>
+</div>*@
+
+<form asp-action="AddOrEditDiagnosisAndProcedure" method="post">
+    <input type="hidden" asp-for="DentistId" />
+    <input type="hidden" asp-for="PatientId" />
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="VisitDate" />
+    <input type="hidden" asp-for="VisitStatus" />
+    <div class="row">
+        <div class="card border-primary mr-3" style="width: 30%;">
+            <div class="card-header"><h4>Visit details</h4></div>
+            <div class="card-body text-primary">
+                <dl class="row">
+                    <dt class="col-sm-5"><text style="color:gray">visit date</text></dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => Model.VisitDate)</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-5"><text style="color:gray">status</text></dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => Model.VisitStatus)</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-5"><text style="color:gray">patient</text></dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.Name) @Html.DisplayFor(model => Model.Patient.LastName)</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-5"><text style="color:gray">dentist</text></dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => Model.Dentist.Name) @Html.DisplayFor(model => Model.Dentist.LastName)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card border-primary mr-3 " style="width: 60%;">
+            <div class="card-header"><h4><text style="color:gray">diagnosis </text>  <textarea asp-for="Diagnosis" class="form-control" style="background-color:whitesmoke;border:none;outline:none;box-shadow:none"></textarea></h4></div>
+            <div class="card-body text-primary">
+                <h4><text style="color:gray">procedure </text><textarea asp-for="Procedure" class="form-control" style="border:hidden;outline:none;box-shadow:none; color:dodgerblue"></textarea></h4>
+            </div>
+            <div class="card-footer">
+                @*<a class="btn btn-outline-primary" asp-action="AddOrEditDiagnosisAndProcedure" asp-route-visitId="@Model.Id">Add or Edit</a>*@
+                <input type="submit" value="Save" class="btn btn-outline-primary" />
+            </div>
+        </div>
+
+        @*<div class="card border-primary mr-3 " style="width: 60%;">
+                <div class="card-header"><h4><text style="color:gray">diagnosis </text> @Html.DisplayFor(model => Model.Diagnosis)</h4></div>
+                <div class="card-body text-primary">
+                    <h4><text style="color:gray">procedure </text>@Html.DisplayFor(model => Model.Procedure)</h4>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Add or Edit" class="btn btn-outline-primary" />
+                </div>
+            </div>*@
+
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

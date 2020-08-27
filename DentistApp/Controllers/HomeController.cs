@@ -20,7 +20,7 @@ namespace DentistApp.Controllers
 
         public async Task<ActionResult> Index()
         {
-            DateTime pom = new DateTime(2003, 03, 03, 00, 00, 00); //"2003-03-03 00:00:00.0000000";
+            DateTime pom = DateTime.Today; //"2003-03-03 00:00:00.0000000";
             return View(_service.GetVisitsForDate(pom));
         }
 

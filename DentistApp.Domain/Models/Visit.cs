@@ -7,15 +7,9 @@ namespace DentistApp.Domain.Models
 {
     public enum Status
     {
-        [Display(Name = "Zarezerwowana")]
         Booked,
-        [Display(Name = "Zatwierdzona")]
-        Confirmed,
-        [Display(Name = "W trakcie")]
         InProgress,
-        [Display(Name = "Anulowana")]
         Canceled,
-        [Display(Name = "Zakończona")]
         Done
     }
     public enum Office
@@ -30,7 +24,7 @@ namespace DentistApp.Domain.Models
     {
         public int Id { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy/HH/mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
         public Office VisitOffice { get; set; }
@@ -39,7 +33,7 @@ namespace DentistApp.Domain.Models
 
         public int DentistId { get; set; }
         public Dentist Dentist { get; set; }
-
+ 
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
     }

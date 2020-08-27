@@ -4,61 +4,109 @@
     ViewData["Title"] = "PatientCard";
 }
 
-<h1>PatientCard</h1>
+<h1>Patient Card</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div class="row">
-    <div class="col-auto">
-        <h3>Dane Pacjenta</h3>
-        <h5>@Html.DisplayFor(model => Model.Patient.Name)</h5>
-        <h5>@Html.DisplayFor(model => Model.Patient.LastName)</h5>
-        <h5>@Html.DisplayFor(model => Model.Patient.PESEL)</h5>
-        <h5>@Html.DisplayFor(model => Model.Patient.BirthDate)</h5>
-        <h5>@Html.DisplayFor(model => Model.Patient.PhoneNumber)</h5>
+    <div class="card border-primary mr-3" style="max-width: 30rem;">
+        <div class="card-header"><h4>Patient Data</h4></div>
+        <div class="card-body text-primary">
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">name</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.Name)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">last name</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.LastName)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">PESEL</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.PESEL)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">birth date</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.BirthDate)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">phone number</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.PhoneNumber)</dd>
+            </dl>
+        </div>
     </div>
-    <div class="col-auto">
-        <h3>Adres Pacjenta</h3>
-        <h5>@Html.DisplayFor(model => Model.Address.Building)</h5>
-        <h5>@Html.DisplayFor(model => Model.Address.Apartment)</h5>
-        <h5>@Html.DisplayFor(model => Model.Address.Street)</h5>
-        <h5>@Html.DisplayFor(model => Model.Address.PostalCode)</h5>
-        <h5>@Html.DisplayFor(model => Model.Address.City)</h5>
+
+    <div class="card border-primary mr-3 " style="max-width: 30rem;">
+        <div class="card-header"><h4>Patient's address</h4></div>
+        <div class="card-body text-primary">
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">street</text></dt>
+                @{
+                    var streetHouse = (@Model.Patient.Address.Apartment).HasValue ? Model.Patient.Address.Street + " " +
+                                                                         Model.Patient.Address.Building.ToString() + "/" +
+                                                                         Model.Patient.Address.Apartment.ToString() : Model.Patient.Address.Street + " " +
+                                                                         Model.Patient.Address.Building.ToString();
+                }
+                <dd class="col-sm-7">@Html.DisplayFor(model => streetHouse) </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">postal code</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.Address.PostalCode)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">city</text></dt>
+                <dd class="col-sm-7">@Html.DisplayFor(model => Model.Patient.Address.City)</dd>
+            </dl>
+        </div>
     </div>
+
+
+    <div class="card border-primary mr-3" style="max-width: 30rem;">
+        <div class="card-header"><h4>History of visits</h4></div>
+        <div class="card-body text-primary" >
+            <table class="table">
+                <thead data-target="#navbar-example2">
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Dentist
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div  style=" height: 200px; overflow-y: scroll;">
+                <table class="table">
+                    <tbody>
+                    @foreach (var item in Model.Visits)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VisitDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VisitStatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Dentist)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+
 </div>
 
-
-
-<table class="table">
-    <thead>
-        <tr>
-          
-            <th>
-                Data
-            </th>
-            <th>
-                Status
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Visits) {
-        <tr>
-       
-            <td>
-                @Html.DisplayFor(modelItem => item.VisitDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VisitStatus)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
