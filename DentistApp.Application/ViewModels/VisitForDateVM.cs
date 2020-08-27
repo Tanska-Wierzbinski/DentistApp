@@ -19,6 +19,10 @@ namespace DentistApp.Application.ViewModels
        // public int PatientId { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
+        public string FullName
+        {
+            get { return Name + " " + LastName; }
+        }
 
         public void Mapping(Profile profile)
         {

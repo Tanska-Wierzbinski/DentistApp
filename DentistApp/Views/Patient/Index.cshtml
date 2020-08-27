@@ -1,4 +1,4 @@
-﻿@model DentistApp.Application.ViewModels.PatientListVM
+﻿@model DentistApp.Application.ViewModels.PatientInfoForIndexListVM
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +13,7 @@
     <thead>
         <tr>
             <th>
-                ID
-            </th>
-            <th>
-                NAME
-            </th>
-            <th>
-               LAST NAME
-            </th>
-            <th>
-                PESEL
-            </th>
-            <th>
-                PHONE NUMBER
+                PATIENT
             </th>
             <th>
                 NEXT VISIT
@@ -37,26 +25,14 @@
 @foreach (var item in Model.Patients) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PESEL)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NextVisit)
             </td>
-            <td> <a class="btn btn-primary" asp-action="PatientCard" asp-route-patientId="@item.Id">Karta Pacjenta</a> </td>
+            <td> <a class="btn btn-primary" asp-action="PatientCard" asp-route-patientId="@item.Id">Patient Card</a> </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Edit", "Edit", new {  id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>

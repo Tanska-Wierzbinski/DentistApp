@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataAnnotationsExtensions;
 using DentistApp.Domain.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -11,16 +12,17 @@ using static DentistApp.Application.Mapping.IMapFrom;
 
 namespace DentistApp.Application.ViewModels
 {
-    public class TempVisitVM : IMapFrom<Visit>
+    public class TemporaryVisitVM : IMapFrom<Visit>
     {
+        public int? Id { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [DisplayName("Data wizyty")]
+        [DisplayName("Visit date")]
         public DateTime VisitDate { get; set; }
         [DisplayFormat(DataFormatString ="{0:HH:mm}")]
         public TimeSpan TimeOfVisit { get; set; }
-        [DisplayName("Dentysta")]
+        [DisplayName("Dentist")]
         public int DentistId { get; set; }
-        [DisplayName("Pacjent")]
+        [DisplayName("Patient")]
         public int PatientId { get; set; }
         public List<SelectListItem> Patients { get; set; }
         public List<SelectListItem> Dentists { get; set; }
@@ -28,9 +30,9 @@ namespace DentistApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, TempVisitVM>().ForMember(v=>v.AvailableVisits, o=>o.Ignore()).ForMember(v=>v.Patients, o=>o.Ignore()).ForMember(v=>v.Dentists,o=>o.Ignore()).ReverseMap();
+            profile.CreateMap<Visit, TemporaryVisitVM>().ForMember(v=>v.AvailableVisits, o=>o.Ignore()).ForMember(v=>v.Patients, o=>o.Ignore()).ForMember(v=>v.Dentists,o=>o.Ignore()).ReverseMap();
         }
-        public TempVisitVM()
+        public TemporaryVisitVM()
         {
             VisitDate =  DateTime.Today;
         }

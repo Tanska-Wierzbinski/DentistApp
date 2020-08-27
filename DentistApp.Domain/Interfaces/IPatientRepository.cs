@@ -11,6 +11,7 @@ namespace DentistApp.Domain.Interfaces
     {
         IQueryable<Patient> GetAll();
         Patient GetById(int patientId);
+        Patient GetByIdWithAddress(int patientId);
         Task Add(Patient patient);
         Task Update(Patient patient);
         Task Delete(int patientId);

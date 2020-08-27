@@ -7,15 +7,9 @@ namespace DentistApp.Domain.Models
 {
     public enum Status
     {
-        [Display(Name = "Zarezerwowana")]
         Booked,
-        [Display(Name = "Zatwierdzona")]
-        Confirmed,
-        [Display(Name = "W trakcie")]
         InProgress,
-        [Display(Name = "Anulowana")]
         Canceled,
-        [Display(Name = "Zakończona")]
         Done
     }
     public enum Office

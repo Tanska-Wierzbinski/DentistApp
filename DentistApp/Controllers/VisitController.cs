@@ -23,13 +23,13 @@ namespace DentistApp.Controllers
         public ActionResult Index()
         {
 
-            return View(_service.GetVisitsDetails());
+            return View(_service.GetAllVisits());
         }
 
         // GET: VisitController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(_service.GetVisitDetails(id));
         }
 
         // GET: VisitController/Create
@@ -42,35 +42,48 @@ namespace DentistApp.Controllers
         // POST: VisitController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(IFormCollection collection, TempVisitVM tempVisit)
+        public async Task<ActionResult> Create(IFormCollection collection, TemporaryVisitVM tempVisit)
         {
             var return_value = await _service.AddVisit_Post(tempVisit);
             if(return_value == 1)
             {
-                return RedirectToAction(nameof(Create), new { message = "Ten pacjent ma już umówioną wizytę na tę godzinę", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId});
+                return RedirectToAction(nameof(Create), new { message = "This patient already has visit at this time.", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId});
             }
             return RedirectToAction(nameof(Index));
         }
 
         // GET: VisitController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(DateTime? date, int? dentistId, int id, string message)
         {
-            return View();
+            return View(_service.EditVisit_Get(date,dentistId,id));
         }
 
         // POST: VisitController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(IFormCollection collection, TemporaryVisitVM tempVisit)
         {
-            try
+            var return_value = await _service.EditVisit_Post(tempVisit);
+            if (return_value == 1)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { message = "This patient already has visit at this time.", date = tempVisit.VisitDate.Date, dentistId = tempVisit.DentistId });
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        //// GET: VisitController/AddOrEditDiagnosisAndProcedure/5
+        //public ActionResult AddOrEditDiagnosisAndProcedure(int visitId)
+        //{
+        //    return View(_service.GetVisitDetails(visitId));
+        //}
+
+        // POST: VisitController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddOrEditDiagnosisAndProcedure(IFormCollection collection, VisitInfoForDetailsVM visit)
+        {
+            await _service.AddOrEditDiagnosisAndProcedure(visit);
+            return RedirectToAction(nameof(Details), new { id = visit.Id});
         }
 
         // GET: VisitController/Delete/5

@@ -10,7 +10,7 @@ namespace DentistApp.Domain.Interfaces
     public interface IDentistRepository
     {
         IQueryable<Dentist> GetAll();
-        Task<Dentist> GetById(int dentistId);
+        Dentist GetById(int dentistId);
         Task Add(Dentist dentist);
         Task Update(Dentist dentist);
         Task Delete(int dentistId);

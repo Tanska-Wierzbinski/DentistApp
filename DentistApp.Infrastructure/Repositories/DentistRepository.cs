@@ -35,9 +35,9 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Dentists;
         }
 
-        public async Task<Dentist> GetById(int dentistId)
+        public Dentist GetById(int dentistId)
         {
-            return await _context.Dentists.SingleOrDefaultAsync(d => d.Id == dentistId);
+            return _context.Dentists.SingleOrDefault(d => d.Id == dentistId);
         }
 
         public async Task Update(Dentist dentist)

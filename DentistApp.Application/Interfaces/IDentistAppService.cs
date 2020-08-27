@@ -11,12 +11,18 @@ namespace DentistApp.Application.Interfaces
     public interface IDentistAppService
     {
         VisitForDateListVM GetVisitsForDate(DateTime date);
-        VisitDetailsListVM GetVisitsDetails();
-        TempVisitVM AddVisit_Get(DateTime? date, int? dentistId);
-        Task<int> AddVisit_Post(TempVisitVM tempVisit);
-        Task EditVisit();
-        Task EditVisit(int idVisit);
-        PatientListVM GetAllPatient();
+        VisitInfoForIndexListVM GetAllVisits();
+        VisitInfoForDetailsVM GetVisitDetails(int visitId);
+        Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit);
+
+        TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId);
+        Task<int> AddVisit_Post(TemporaryVisitVM tempVisit);
+        TemporaryVisitVM EditVisit_Get(DateTime? date, int? dentistId, int visitId);
+        Task<int> EditVisit_Post(TemporaryVisitVM tempVisit);
+        PatientForEditVM EditPatient_Get(int patientId);
+        Task EditPatient_Post(PatientForEditVM patient);
+
+        PatientInfoForIndexListVM GetAllPatient();
         PatientCardVM GetPatientCard(int patientId);
 
 

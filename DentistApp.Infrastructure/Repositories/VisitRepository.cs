@@ -35,11 +35,15 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist);
         }
 
-        public async Task<Visit> GetById(int visitId)
+        public Visit GetById(int visitId)
         {
-            return await _context.Visits.SingleOrDefaultAsync(v => v.Id == visitId);
+            return _context.Visits.SingleOrDefault(v => v.Id == visitId);
         }
-       
+        public Visit GetByIdWithDentistAndPatient(int visitId)
+        {
+            return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist).SingleOrDefault(v => v.Id == visitId);
+        }
+
         public IQueryable<Visit> GetForDate(DateTime date)
         {
             return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date)).Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
@@ -56,7 +60,7 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Visit> GetForPatient(int patientId)
         {
-            return _context.Visits.Where(v => v.PatientId == patientId);
+            return _context.Visits.Where(v => v.PatientId == patientId).Include(d=>d.Dentist);
         }
 
         public async Task Update(Visit visit)

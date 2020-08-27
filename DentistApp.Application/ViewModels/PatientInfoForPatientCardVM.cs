@@ -8,20 +8,23 @@ using static DentistApp.Application.Mapping.IMapFrom;
 
 namespace DentistApp.Application.ViewModels
 {
-    public class PatientVM : IMapFrom<Patient>
+    public class PatientInfoForPatientCardVM : IMapFrom<Patient>
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
-        public string PESEL { get; set; }
+        [Phone]
         public string PhoneNumber { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime? NextVisit { get; set; }
+        public string PESEL { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime BirthDate { get; set; }
+        public AddressVM Address { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Patient, PatientVM>().ReverseMap();
+            profile.CreateMap<Patient, PatientInfoForPatientCardVM>().ReverseMap();
 
         }
+
     }
 }

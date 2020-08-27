@@ -8,9 +8,8 @@ namespace DentistApp.Application.ViewModels
 {
     public class PatientCardVM
     {
-        public PatientDetailsVM Patient { get; set; }
-        public AddressVM Address { get; set; }
-        public List<VisitBasicInfoVM> Visits { get; set; }
+        public PatientInfoForPatientCardVM Patient { get; set; }
+        public List<VisitInfoForPatientCardVM> Visits { get; set; }
 
     }
 }

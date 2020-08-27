@@ -33,29 +33,17 @@ namespace DentistApp.Application.Services
         }
 
 
-        public Task EditVisit()
+        public PatientInfoForIndexListVM GetAllPatient()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task EditVisit(int idVisit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PatientListVM GetAllPatient()
-        {
-            var patients = _patientRepository.GetAll().ProjectTo<PatientVM>(_mapper.ConfigurationProvider).ToList();
+            var patients = _patientRepository.GetAll().ProjectTo<PatientInfoForIndexVM>(_mapper.ConfigurationProvider).ToList();
             foreach (var patient in patients)
             {
                 var visit = _visitRepository.GetForPatient(patient.Id).Where(p => p.VisitDate.CompareTo(DateTime.Now) > 0).Select(p => p.VisitDate);//.DefaultIfEmpty(default).Min();//.Min();
-                //var next = _visitRepository.GetForPatient(patient.Id).Where(p => p.VisitDate.CompareTo(DateTime.Now) < 0);//.Min(p => p.VisitDate);
-                //if (next.Any())
-                //    patient.NextVisit = next.Min(p => p.VisitDate);
-                if(visit.Any())
+
+                if (visit.Any())
                     patient.NextVisit = visit.Min();
             }
-            return new PatientListVM()
+            return new PatientInfoForIndexListVM()
             {
                 Patients = patients
             };
@@ -74,95 +62,73 @@ namespace DentistApp.Application.Services
             };
         }
 
-        public VisitDetailsListVM GetVisitsDetails()
-        {
-            var visits = _visitRepository.GetAll().ProjectTo<VisitDetailsVM>(_mapper.ConfigurationProvider);
 
-            return new VisitDetailsListVM()
+
+        public VisitInfoForIndexListVM GetAllVisits()
+        {
+            var visits = _visitRepository.GetAll().ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider);
+            var dates = visits.GroupBy(d => d.VisitDate.Date).Select(d => d.Key);
+
+            return new VisitInfoForIndexListVM()
             {
-                Visits = visits.OrderBy(v => v.VisitDate.Date).ThenBy(v=>v.VisitDate.TimeOfDay).ToList()
+                Visits = visits.OrderBy(v => v.VisitDate.Date).ThenBy(v => v.VisitDate.TimeOfDay).ToList(),
+                Dates = dates.ToList()
             };
         }
 
         public PatientCardVM GetPatientCard(int patientId)
         {
-            var patient = _mapper.Map<PatientDetailsVM>(_patientRepository.GetById(patientId));
-            var address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
-            var visits = _visitRepository.GetForPatient(patientId).ProjectTo<VisitBasicInfoVM>(_mapper.ConfigurationProvider);
+            var patient = _mapper.Map<PatientInfoForPatientCardVM>(_patientRepository.GetByIdWithAddress(patientId));
+            var visits = _visitRepository.GetForPatient(patientId).OrderBy(v=>v.VisitDate.Date).ThenBy(v=>v.VisitDate.TimeOfDay).ProjectTo<VisitInfoForPatientCardVM>(_mapper.ConfigurationProvider);
             return new PatientCardVM()
             {
                 Patient = patient,
-                Address = address,
                 Visits = visits.ToList()
             };
         }
 
-        public TempVisitVM AddVisit_Get(DateTime? date, int? dentistId)
+        public TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId)
         {
-            if(date == null)
+            if (date == null)
             {
                 date = DateTime.Today;
             }
-            var dentists = _dentistRepository.GetAll().ProjectTo<DentistBasicInfo>(_mapper.ConfigurationProvider);
-            var patients = _patientRepository.GetAll().ProjectTo<PatientBasicInfo>(_mapper.ConfigurationProvider);
+            var dentists = _dentistRepository.GetAll().ProjectTo<DentistBasicInfoVM>(_mapper.ConfigurationProvider);
+            var patients = _patientRepository.GetAll().ProjectTo<PatientBasicInfoVM>(_mapper.ConfigurationProvider);
             var bookedVisits = new List<DateTime>();
             var availableVisits = new List<TimeSpan>();
-            for(TimeSpan i = new TimeSpan(8,0,0);i<=new TimeSpan(15,30,0);i+=new TimeSpan(0,30,0))
-            {
-                availableVisits.Add(i);
-            }
 
-            if (!dentistId.HasValue || dentistId == 0)
-            {
-               bookedVisits = _visitRepository.GetForDate(date.Value.Date)
-                                                .GroupBy(v => v.VisitDate)
-                                                .Where(v => v.Count() == dentists.Count())
-                                                .Select(v => v.Key).ToList();
-            }
-            else
-            {
-                bookedVisits = _visitRepository.GetForDate(date.Value.Date)
-                                                .Where(v => v.DentistId == dentistId)
-                                                .Select(v => v.VisitDate).ToList();
-            }
+            CheckForAvailableVisits(dentists, patients, bookedVisits, availableVisits, date.Value, dentistId);
 
-            foreach(var visit in bookedVisits)
-            {
-                if(availableVisits.Contains(visit.TimeOfDay))
-                {
-                    availableVisits.Remove(visit.TimeOfDay);
-                }
-            }
-            var dent = dentists.Select(s => new SelectListItem { Text = s.Name +" "+ s.LastName, Value = s.Id.ToString() }).ToList();
-            dent.Insert(0, new SelectListItem { Text = "Dowolny", Value = "0" });
-            return new TempVisitVM()
+            var dent = dentists.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList();
+            dent.Insert(0, new SelectListItem { Text = "Any", Value = "0" });
+
+            return new TemporaryVisitVM()
             {
                 Dentists = dent,
-                Patients = patients.Select(s => new SelectListItem { Text = s.Name +" "+ s.LastName, Value = s.Id.ToString() }).ToList(),//patients.ToList(),
-                //BookedVisits = bookedVisits,
+                Patients = patients.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList(),
                 AvailableVisits = availableVisits,
                 VisitDate = date.Value,
                 DentistId = dentistId.GetValueOrDefault(0)
             };
         }
 
-        public async Task<int> AddVisit_Post(TempVisitVM tempVisit)
+        public async Task<int> AddVisit_Post(TemporaryVisitVM tempVisit)
         {
             tempVisit.VisitDate = tempVisit.VisitDate + tempVisit.TimeOfVisit;
             var visits = _visitRepository.GetForDateTime(tempVisit.VisitDate);
             if (tempVisit.DentistId == 0)
             {
-                if(visits.Any())
+                if (visits.Any())
                 {
-                    if(visits.Select(v=>v.PatientId).Contains(tempVisit.PatientId))
+                    if (visits.Select(v => v.PatientId).Contains(tempVisit.PatientId))
                     {
-                        ///////////////////////////////////////////////////// 
                         return 1;
                     }
-                    var dentists = _dentistRepository.GetAll().Select(d=>d.Id).ToList();
-                    foreach(var v in visits)
+                    var dentists = _dentistRepository.GetAll().Select(d => d.Id).ToList();
+                    foreach (var v in visits)
                     {
-                        if(dentists.Contains(v.DentistId))
+                        if (dentists.Contains(v.DentistId))
                         {
                             dentists.Remove(v.DentistId);
                         }
@@ -181,6 +147,143 @@ namespace DentistApp.Application.Services
             var visit = _mapper.Map<Visit>(tempVisit);
             await _visitRepository.Add(visit);
             return 0;
+        }
+
+        public TemporaryVisitVM EditVisit_Get(DateTime? date, int? dentistId, int visitId)
+        {
+            var result = _visitRepository.GetById(visitId);
+            if (!date.HasValue)
+            {
+                date = result.VisitDate;
+            }
+            if (!dentistId.HasValue)
+            {
+                dentistId = result.DentistId;
+            }
+
+            var dentists = _dentistRepository.GetAll().ProjectTo<DentistBasicInfoVM>(_mapper.ConfigurationProvider);
+            var patients = _patientRepository.GetAll().ProjectTo<PatientBasicInfoVM>(_mapper.ConfigurationProvider);
+            var bookedVisits = new List<DateTime>();
+            var availableVisits = new List<TimeSpan>();
+
+            CheckForAvailableVisits(dentists, patients, bookedVisits, availableVisits, date.Value, dentistId);
+
+            var dent = dentists.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList();
+            dent.Insert(0, new SelectListItem { Text = "Any", Value = "0" });
+            return new TemporaryVisitVM()
+            {
+                Id = result.Id,
+                Dentists = dent,
+                Patients = patients.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList(),//patients.ToList(),
+                //BookedVisits = bookedVisits,
+                AvailableVisits = availableVisits,
+                VisitDate = date.Value,
+                DentistId = dentistId.GetValueOrDefault(0),
+                PatientId = result.PatientId
+            };
+        }
+
+        public async Task<int> EditVisit_Post(TemporaryVisitVM tempVisit)
+        {
+            tempVisit.VisitDate = tempVisit.VisitDate + tempVisit.TimeOfVisit;
+            var visits = _visitRepository.GetForDateTime(tempVisit.VisitDate);
+            if (tempVisit.DentistId == 0)
+            {
+                if (visits.Any())
+                {
+                    if (visits.Select(v => v.PatientId).Contains(tempVisit.PatientId))
+                    {
+                        return 1;
+                    }
+                    var dentists = _dentistRepository.GetAll().Select(d => d.Id).ToList();
+                    foreach (var v in visits)
+                    {
+                        if (dentists.Contains(v.DentistId))
+                        {
+                            dentists.Remove(v.DentistId);
+                        }
+                    }
+                    if (dentists.Any())
+                    {
+                        tempVisit.DentistId = dentists.First();
+                    }
+                }
+                else
+                {
+                    tempVisit.DentistId = _dentistRepository.GetAll().Select(d => d.Id).First();
+                }
+            }
+
+            var visit = _mapper.Map<Visit>(tempVisit);
+            await _visitRepository.Update(visit);
+            return 0;
+        }
+
+        public PatientForEditVM EditPatient_Get(int patientId)
+        {
+            var patient = _mapper.Map<PatientForEditVM>(_patientRepository.GetByIdWithAddress(patientId));
+            //var address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
+
+            //patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId)); ;
+            return patient;
+        }
+
+        public async Task EditPatient_Post(PatientForEditVM editedPatient)
+        {
+            var patient = _mapper.Map<Patient>(editedPatient);
+            await _patientRepository.Update(patient);
+
+            //var address = _mapper.Map<Address>(editedPatient.Address);
+            //await _addressRepository.Update(address);
+        }
+
+
+
+        private void CheckForAvailableVisits(IQueryable<DentistBasicInfoVM> dentists, IQueryable<PatientBasicInfoVM> patients, List<DateTime> bookedVisits, List<TimeSpan> availableVisits, DateTime date, int? dentistId)
+        {
+            for (TimeSpan i = new TimeSpan(8, 0, 0); i <= new TimeSpan(15, 30, 0); i += new TimeSpan(0, 30, 0))
+            {
+                if ((date.Date < DateTime.Now.Date) || ((date.Date == DateTime.Now.Date) && (i < DateTime.Now.TimeOfDay)))
+                {
+                    continue;
+                }
+                availableVisits.Add(i);
+            }
+
+            if (!dentistId.HasValue || dentistId.Value == 0)
+            {
+                bookedVisits = _visitRepository.GetForDate(date.Date)
+                                                 .GroupBy(v => v.VisitDate)
+                                                 .Where(v => v.Count() == dentists.Count())
+                                                 .Select(v => v.Key).ToList();
+            }
+            else
+            {
+                bookedVisits = _visitRepository.GetForDate(date.Date)
+                                                .Where(v => v.DentistId == dentistId.Value)
+                                                .Select(v => v.VisitDate).ToList();
+            }
+
+            foreach (var visit in bookedVisits)
+            {
+                if (availableVisits.Contains(visit.TimeOfDay))
+                {
+                    availableVisits.Remove(visit.TimeOfDay);
+                }
+            }
+        }
+
+        public VisitInfoForDetailsVM GetVisitDetails(int visitId)
+        {
+            var visit = _mapper.Map<VisitInfoForDetailsVM>(_visitRepository.GetByIdWithDentistAndPatient(visitId));
+            
+            return visit;
+        }
+
+        public async Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit)
+        {
+            var result = _mapper.Map<Visit>(visit);
+            await _visitRepository.Update(result);
         }
     }
 }

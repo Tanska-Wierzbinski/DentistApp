@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DentistApp.Application.Interfaces;
+using DentistApp.Application.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -57,22 +58,17 @@ namespace DentistApp.Controllers
         // GET: PatientController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_service.EditPatient_Get(id));
         }
 
         // POST: PatientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(IFormCollection collection, PatientForEditVM editedPatient)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.EditPatient_Post(editedPatient);
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: PatientController/Delete/5
