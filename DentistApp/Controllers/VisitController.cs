@@ -89,15 +89,15 @@ namespace DentistApp.Controllers
         // GET: VisitController/Delete/5
         public ActionResult Cancel(int id)
         {
-            return View();
+            return View(_service.Cancel_Get(id));
         }
 
         // POST: VisitController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Cancel(int id, IFormCollection collection)
+        public async Task<ActionResult> Cancel(int id, IFormCollection collection)
         {
-
+           await  _service.Cancel_Post(id);
             return RedirectToAction(nameof(Index));
 
         }

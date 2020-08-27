@@ -9,57 +9,133 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<div class="row">
-    <div class="col-auto">
-        <h4> @Html.DisplayFor(model => Model.CurrentDate)</h4>
+
+
+<div class="border border-primary p-3 row" style="background-color:whitesmoke; color:cornflowerblue; justify-content:space-between;">
+    <div class="col">
+        @{ var day = Model.CurrentDate.ToString("dd MMMM yyyy");
+            <h4 class="float-left">@Html.DisplayFor(modelItem => day)</h4>}
+        </div>
+        <div class="col">
+            <h4 class="text-center">Number of visits: @Html.DisplayFor(modelItem => Model.Count)</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-right">Number of done visits: @Html.DisplayFor(modelItem => Model.DoneVisits)</h4>
+        </div>
     </div>
+    @*@foreach (var d in Model.Visits)
+        {*@
 
-    <div class="col-auto">
-        <h4>Number of visits: @Html.DisplayFor(model => Model.Count)</h4>
-    </div>
-    <div class="col-auto">
-        <h4>Number of done visits: @Html.DisplayFor(model => Model.DoneVisits)</h4>
-    </div>
-
-</div>
-<table class="table">
-    <thead>
-        <tr>
-
-            <th>
-                Time
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Status
-            </th>
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Visits)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VisitDate)
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.LastName)*@
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VisitStatus)
-                </td>
-
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
+                <th class="col" style="width:10%">
+                    Time
+                </th>
+                <th class="col" style="width:15%">
+                    Status
+                </th>
+                <th class="col" style="width:25%">
+                    Patient
+                </th>
+                <th class="col" style="width:25%">
+                    Dentist
+                </th>
+                <th class="col" style="width:25%"></th>
             </tr>
+        </thead>
+        @*</table>*@
+        @foreach (var v in Model.Visits)
+        {
+            //if (v.VisitDate.Date == d.Date)
+            //{
+            @*<table class="table " >*@
+            <tbody>
+                <tr>
+                    <td>
+                        @{ var timeofday = v.VisitDate.ToString("HH:mm");
+                            @Html.DisplayFor(modelItem => timeofday)}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.VisitStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.PatientFullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.DentistFullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { id = v.Id }) |
+                            @Html.ActionLink("Details", "Details", new { id = v.Id }) |
+                            @Html.ActionLink("Cancel", "Cancel", new { id = v.Id })*@
+
+                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@v.Id">Details</a>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@v.Id">Edit</a>
+                        @{var isAvailable = (v.VisitDate < DateTime.Now) || (v.VisitStatus.ToString() == "Canceled") ? "display:none" : ""; }
+                        <a style="@isAvailable" class="btn btn-primary" asp-action="Cancel" asp-route-id="@v.Id">Cancel</a>
+
+                    </td>
+                </tr>
+            </tbody>
+
+            @*}*@
         }
-    </tbody>
-</table>
+
+    </table>
+    @*}*@
+
+
+    <!--<div class="row">
+        <div class="col-auto">
+            <h4> Html.DisplayFor(model => Model.CurrentDate)</h4>
+        </div>
+
+        <div class="col-auto">
+            <h4>Number of visits: Html.DisplayFor(model => Model.Count)</h4>
+        </div>
+        <div class="col-auto">
+            <h4>Number of done visits: Html.DisplayFor(model => Model.DoneVisits)</h4>
+        </div>
+
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>
+                    Time
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Status
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            foreach (var item in Model.Visits)
+            {
+                <tr>
+                    <td>
+                        Html.DisplayFor(modelItem => item.VisitDate)
+                    </td>
+                    <td>-->
+    <!--Html.DisplayFor(modelItem => item.PatientFullName)
+                    </td>
+                    <td>
+                        Html.DisplayFor(modelItem => item.VisitStatus)
+                    </td>
+
+                    <td>
+                        Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>-->

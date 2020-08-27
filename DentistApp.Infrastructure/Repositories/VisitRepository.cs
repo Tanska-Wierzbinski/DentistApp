@@ -39,6 +39,12 @@ namespace DentistApp.Infrastructure.Repositories
         {
             return _context.Visits.SingleOrDefault(v => v.Id == visitId);
         }
+
+        public Visit GetByIdForCancel(int visitId)
+        {
+            return _context.Visits.Include(p => p.Patient).SingleOrDefault(v => v.Id == visitId);
+        }
+
         public Visit GetByIdWithDentistAndPatient(int visitId)
         {
             return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist).SingleOrDefault(v => v.Id == visitId);

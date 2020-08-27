@@ -14,6 +14,8 @@ namespace DentistApp.Application.Interfaces
         VisitInfoForIndexListVM GetAllVisits();
         VisitInfoForDetailsVM GetVisitDetails(int visitId);
         Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit);
+        VisitInfoForCancelVM Cancel_Get(int visitId);
+        Task Cancel_Post(int visitId);
 
         TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId);
         Task<int> AddVisit_Post(TemporaryVisitVM tempVisit);

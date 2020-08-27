@@ -32,7 +32,18 @@ namespace DentistApp.Application.Services
             _mapper = mapper;
         }
 
+        public VisitInfoForCancelVM Cancel_Get(int visitId)
+        {
+            var visit = _mapper.Map<VisitInfoForCancelVM>(_visitRepository.GetByIdForCancel(visitId));
+            return visit;
+        }
+        public async Task Cancel_Post(int visitId)
+        {
+            var visit = _visitRepository.GetById(visitId);
+            visit.VisitStatus = Status.Canceled;
+            await _visitRepository.Update(visit);
 
+        }
         public PatientInfoForIndexListVM GetAllPatient()
         {
             var patients = _patientRepository.GetAll().ProjectTo<PatientInfoForIndexVM>(_mapper.ConfigurationProvider).ToList();
@@ -51,11 +62,25 @@ namespace DentistApp.Application.Services
 
         public VisitForDateListVM GetVisitsForDate(DateTime date)
         {
-            var visits = _visitRepository.GetForDate(date).ProjectTo<VisitForDateVM>(_mapper.ConfigurationProvider);
-
+            var visits = _visitRepository.GetForDate(date).ProjectTo<VisitForDateVM>(_mapper.ConfigurationProvider).ToList();
+            foreach(var visit in visits)
+            {
+                if(date >= visit.VisitDate && date < visit.VisitDate.AddMinutes(30) && visit.VisitStatus!=Status.Canceled)
+                {
+                    visit.VisitStatus = Status.InProgress;
+                    var v = _mapper.Map<Visit>(visit);
+                     _visitRepository.Update(v);
+                }
+                else if(date >= visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled)
+                {
+                    visit.VisitStatus = Status.Done;
+                    var v = _mapper.Map<Visit>(visit);
+                     _visitRepository.Update(v);
+                }
+            }
             return new VisitForDateListVM()
             {
-                Visits = visits.ToList(),
+                Visits = visits,
                 Count = visits.Count(),
                 DoneVisits = visits.Count(v => v.VisitStatus == Domain.Models.Status.Done),
                 CurrentDate = DateTime.Now.Date
@@ -66,12 +91,29 @@ namespace DentistApp.Application.Services
 
         public VisitInfoForIndexListVM GetAllVisits()
         {
-            var visits = _visitRepository.GetAll().ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider);
+            var visits = _visitRepository.GetAll().ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider)
+                                                    .OrderBy(v => v.VisitDate.Date)
+                                                    .ThenBy(v => v.VisitDate.TimeOfDay).ToList();
+            foreach (var visit in visits)
+            {
+                if (DateTime.Now >= visit.VisitDate && DateTime.Now < visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled)
+                {
+                    visit.VisitStatus = Status.InProgress;
+                    var v = _mapper.Map<Visit>(visit);
+                    _visitRepository.Update(v);
+                }
+                else if (DateTime.Now >= visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled)
+                {
+                    visit.VisitStatus = Status.Done;
+                    var v = _mapper.Map<Visit>(visit);
+                    _visitRepository.Update(v);
+                }
+            }
             var dates = visits.GroupBy(d => d.VisitDate.Date).Select(d => d.Key);
 
             return new VisitInfoForIndexListVM()
             {
-                Visits = visits.OrderBy(v => v.VisitDate.Date).ThenBy(v => v.VisitDate.TimeOfDay).ToList(),
+                Visits = visits,
                 Dates = dates.ToList()
             };
         }
@@ -253,6 +295,7 @@ namespace DentistApp.Application.Services
             if (!dentistId.HasValue || dentistId.Value == 0)
             {
                 bookedVisits = _visitRepository.GetForDate(date.Date)
+                                                 .Where(v=>v.VisitStatus == Status.Booked )
                                                  .GroupBy(v => v.VisitDate)
                                                  .Where(v => v.Count() == dentists.Count())
                                                  .Select(v => v.Key).ToList();
@@ -260,7 +303,7 @@ namespace DentistApp.Application.Services
             else
             {
                 bookedVisits = _visitRepository.GetForDate(date.Date)
-                                                .Where(v => v.DentistId == dentistId.Value)
+                                                .Where(v => v.DentistId == dentistId.Value && v.VisitStatus == Status.Booked)
                                                 .Select(v => v.VisitDate).ToList();
             }
 
