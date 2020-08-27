@@ -16,11 +16,11 @@ namespace DentistApp.Application.Interfaces
         Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit);
         VisitInfoForCancelVM Cancel_Get(int visitId);
         Task Cancel_Post(int visitId);
-
         TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId);
         Task<int> AddVisit_Post(TemporaryVisitVM tempVisit);
         TemporaryVisitVM EditVisit_Get(DateTime? date, int? dentistId, int visitId);
         Task<int> EditVisit_Post(TemporaryVisitVM tempVisit);
+        Task AddPatient_Post(PatientForEditVM new_patient);
         PatientForEditVM EditPatient_Get(int patientId);
         Task EditPatient_Post(PatientForEditVM patient);
 
