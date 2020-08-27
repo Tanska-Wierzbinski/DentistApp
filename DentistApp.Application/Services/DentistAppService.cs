@@ -285,5 +285,11 @@ namespace DentistApp.Application.Services
             var result = _mapper.Map<Visit>(visit);
             await _visitRepository.Update(result);
         }
+
+        public async Task AddPatient_Post(PatientForEditVM new_patient)
+        {
+            var patient = _mapper.Map<Patient>(new_patient);
+            await _patientRepository.Add(patient);
+        }
     }
 }

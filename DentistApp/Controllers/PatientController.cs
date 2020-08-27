@@ -37,7 +37,7 @@ namespace DentistApp.Controllers
         // GET: PatientController/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new PatientForEditVM() { BirthDate = DateTime.Today});
         }
 
         // POST: PatientController/Create
