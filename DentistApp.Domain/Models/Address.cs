@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DentistApp.Domain.Models
@@ -8,6 +9,8 @@ namespace DentistApp.Domain.Models
     public class Address
     {
         [Key]
+        public int Id { get; set; }
+        [ForeignKey("PatientId")]
         public int PatientId { get; set; }
         public int Building { get; set; }
         public int? Apartment { get; set; }
@@ -15,6 +18,6 @@ namespace DentistApp.Domain.Models
         public string City { get; set; }
         public string PostalCode { get; set; }
 
-        public Patient Patient { get; set; }
+        //public Patient Patient { get; set; }
     }
 }

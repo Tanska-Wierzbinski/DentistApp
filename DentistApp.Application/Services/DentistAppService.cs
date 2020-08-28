@@ -31,19 +31,22 @@ namespace DentistApp.Application.Services
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-
+        //naprawione
         public VisitInfoForCancelVM Cancel_Get(int visitId)
         {
-            var visit = _mapper.Map<VisitInfoForCancelVM>(_visitRepository.GetByIdForCancel(visitId));
+            var visit = _mapper.Map<VisitInfoForCancelVM>(_visitRepository.GetById(visitId));
+            visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
             return visit;
         }
+        //naprawione
         public async Task Cancel_Post(int visitId)
         {
             var visit = _visitRepository.GetById(visitId);
             visit.VisitStatus = Status.Canceled;
-            await _visitRepository.Update(visit);
+            _visitRepository.Update(visit);
 
         }
+        //naprawione
         public PatientInfoForIndexListVM GetAllPatient()
         {
             var patients = _patientRepository.GetAll().ProjectTo<PatientInfoForIndexVM>(_mapper.ConfigurationProvider).ToList();
@@ -59,13 +62,18 @@ namespace DentistApp.Application.Services
                 Patients = patients
             };
         }
-
+        //naprawione
         public VisitForDateListVM GetVisitsForDate(DateTime date)
         {
-            var visits = _visitRepository.GetForDate(date).ProjectTo<VisitForDateVM>(_mapper.ConfigurationProvider).ToList();
+            var visits = _visitRepository.GetForDate(date).OrderBy(v=>v.VisitDate.TimeOfDay)
+                                            .ProjectTo<VisitForDateVM>(_mapper.ConfigurationProvider)
+                                            .ToList();
+            
             foreach(var visit in visits)
             {
-                if(date >= visit.VisitDate && date < visit.VisitDate.AddMinutes(30) && visit.VisitStatus!=Status.Canceled)
+                visit.Dentist = _mapper.Map<DentistBasicInfoVM>(_dentistRepository.GetById(visit.DentistId));
+                visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
+                if (date >= visit.VisitDate && date < visit.VisitDate.AddMinutes(30) && visit.VisitStatus!=Status.Canceled)
                 {
                     visit.VisitStatus = Status.InProgress;
                     var v = _mapper.Map<Visit>(visit);
@@ -86,21 +94,23 @@ namespace DentistApp.Application.Services
                 CurrentDate = DateTime.Now.Date
             };
         }
-
-
-
+        //naprawione
         public VisitInfoForIndexListVM GetAllVisits()
         {
-            var visits = _visitRepository.GetAll().ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider)
-                                                    .OrderBy(v => v.VisitDate.Date)
-                                                    .ThenBy(v => v.VisitDate.TimeOfDay).ToList();
+            //var pom = _visitRepository.GetAll();
+            var visits = _visitRepository.GetAll().OrderBy(v => v.VisitDate.Date)
+                                                    .ThenBy(v => v.VisitDate.TimeOfDay)
+                                                    .ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider)
+                                                    .ToList();
             foreach (var visit in visits)
             {
+                visit.Dentist = _mapper.Map<DentistBasicInfoVM>(_dentistRepository.GetById(visit.DentistId));
+                visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
                 if (DateTime.Now >= visit.VisitDate && DateTime.Now < visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled)
                 {
                     visit.VisitStatus = Status.InProgress;
                     var v = _mapper.Map<Visit>(visit);
-                    _visitRepository.Update(v);
+                  //  _visitRepository.Update(v);
                 }
                 else if (DateTime.Now >= visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled)
                 {
@@ -117,18 +127,23 @@ namespace DentistApp.Application.Services
                 Dates = dates.ToList()
             };
         }
-
+        //naprawione
         public PatientCardVM GetPatientCard(int patientId)
         {
-            var patient = _mapper.Map<PatientInfoForPatientCardVM>(_patientRepository.GetByIdWithAddress(patientId));
+            var patient = _mapper.Map<PatientInfoForPatientCardVM>(_patientRepository.GetById(patientId));
+            patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
             var visits = _visitRepository.GetForPatient(patientId).OrderBy(v=>v.VisitDate.Date).ThenBy(v=>v.VisitDate.TimeOfDay).ProjectTo<VisitInfoForPatientCardVM>(_mapper.ConfigurationProvider);
+            foreach(var visit in visits)
+            {
+                visit.Dentist = _mapper.Map<DentistBasicInfoVM>(_dentistRepository.GetById(visit.DentistId));
+            }
             return new PatientCardVM()
             {
                 Patient = patient,
                 Visits = visits.ToList()
             };
         }
-
+        //naprawione
         public TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId)
         {
             if (date == null)
@@ -154,7 +169,7 @@ namespace DentistApp.Application.Services
                 DentistId = dentistId.GetValueOrDefault(0)
             };
         }
-
+        //naprawione
         public async Task<int> AddVisit_Post(TemporaryVisitVM tempVisit)
         {
             tempVisit.VisitDate = tempVisit.VisitDate + tempVisit.TimeOfVisit;
@@ -190,7 +205,7 @@ namespace DentistApp.Application.Services
             await _visitRepository.Add(visit);
             return 0;
         }
-
+        //naprawione
         public TemporaryVisitVM EditVisit_Get(DateTime? date, int? dentistId, int visitId)
         {
             var result = _visitRepository.GetById(visitId);
@@ -224,7 +239,7 @@ namespace DentistApp.Application.Services
                 PatientId = result.PatientId
             };
         }
-
+        //naprawoine
         public async Task<int> EditVisit_Post(TemporaryVisitVM tempVisit)
         {
             tempVisit.VisitDate = tempVisit.VisitDate + tempVisit.TimeOfVisit;
@@ -257,30 +272,31 @@ namespace DentistApp.Application.Services
             }
 
             var visit = _mapper.Map<Visit>(tempVisit);
-            await _visitRepository.Update(visit);
+            _visitRepository.Update(visit);
             return 0;
         }
-
+        //naprawione
         public PatientForEditVM EditPatient_Get(int patientId)
         {
-            var patient = _mapper.Map<PatientForEditVM>(_patientRepository.GetByIdWithAddress(patientId));
+            var patient = _mapper.Map<PatientForEditVM>(_patientRepository.GetById(patientId));
+            patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
             //var address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
 
             //patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId)); ;
             return patient;
         }
-
+        //naprawione
         public async Task EditPatient_Post(PatientForEditVM editedPatient)
         {
             var patient = _mapper.Map<Patient>(editedPatient);
+            var address = _mapper.Map<Address>(editedPatient.Address);
+            _addressRepository.Update(address);
             await _patientRepository.Update(patient);
 
             //var address = _mapper.Map<Address>(editedPatient.Address);
             //await _addressRepository.Update(address);
         }
-
-
-
+        //naprawione
         private void CheckForAvailableVisits(IQueryable<DentistBasicInfoVM> dentists, IQueryable<PatientBasicInfoVM> patients, List<DateTime> bookedVisits, List<TimeSpan> availableVisits, DateTime date, int? dentistId)
         {
             for (TimeSpan i = new TimeSpan(8, 0, 0); i <= new TimeSpan(15, 30, 0); i += new TimeSpan(0, 30, 0))
@@ -315,18 +331,22 @@ namespace DentistApp.Application.Services
                 }
             }
         }
-
+        //naprawone
         public VisitInfoForDetailsVM GetVisitDetails(int visitId)
         {
-            var visit = _mapper.Map<VisitInfoForDetailsVM>(_visitRepository.GetByIdWithDentistAndPatient(visitId));
-            
+            var visit = _mapper.Map<VisitInfoForDetailsVM>(_visitRepository.GetById(visitId));
+            visit.Dentist = _mapper.Map<DentistBasicInfoVM>(_dentistRepository.GetById(visit.DentistId));
+            visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
+
+
+
             return visit;
         }
-
+        //naprawione
         public async Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit)
         {
             var result = _mapper.Map<Visit>(visit);
-            await _visitRepository.Update(result);
+             _visitRepository.Update(result);
         }
     }
 }

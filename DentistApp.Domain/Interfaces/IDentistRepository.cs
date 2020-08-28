@@ -12,7 +12,7 @@ namespace DentistApp.Domain.Interfaces
         IQueryable<Dentist> GetAll();
         Dentist GetById(int dentistId);
         Task Add(Dentist dentist);
-        Task Update(Dentist dentist);
+        void Update(Dentist dentist);
         Task Delete(int dentistId);
     }
 }

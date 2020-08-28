@@ -2,7 +2,7 @@
 
 namespace DentistApp.Infrastructure.Migrations
 {
-    public partial class dateformat : Migration
+    public partial class addresskey : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

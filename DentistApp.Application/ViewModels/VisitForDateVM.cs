@@ -17,25 +17,21 @@ namespace DentistApp.Application.ViewModels
         public Status VisitStatus { get; set; }
         //public Office VisitOffice { get; set; }
         // public int PatientId { get; set; }
-        public int PatientId { get; set; }
+        //public int PatientId { get; set; }
+        //public int DentistId { get; set; }
+        public string Diagnosis { get; set; }
+        public string Procedure { get; set; }
         public int DentistId { get; set; }
-        public string PatientName { get; set; }
-        public string PatientLastName { get; set; }
-        public string PatientFullName
-        {
-            get { return PatientName + " " + PatientLastName; }
-        }
-        public string DentistName { get; set; }
-        public string DentistLastName { get; set; }
-        public string DentistFullName
-        {
-            get { return DentistName + " " + DentistLastName; }
-        }
+        public int PatientId { get; set; }
+        public DentistBasicInfoVM Dentist { get; set; }
+        public PatientBasicInfoVM Patient { get; set; }
 
         public void Mapping(Profile profile)
         {
             //profile.CreateMap<Patient, VisitForDateVM>().ForMember(d=>d.Id,opt => opt.Ignore()).ForMember(d=>d.PatientId, opt=>opt.MapFrom(s=>s.Id)).ReverseMap();
-            profile.CreateMap<Visit, VisitForDateVM>().ForMember(d => d.PatientName, opt => opt.MapFrom(s => s.Patient.Name)).ForMember(d=>d.PatientLastName, opt=>opt.MapFrom(s=>s.Patient.LastName)).ForMember(d => d.DentistName, opt => opt.MapFrom(s => s.Dentist.Name)).ForMember(d => d.DentistLastName, opt => opt.MapFrom(s => s.Dentist.LastName)).ReverseMap();
+            profile.CreateMap<Visit, VisitForDateVM>()//.ForMember(d => d.Patient.Id, opt => opt.MapFrom(s => s.PatientId))
+                                                      //.ForMember(d=>d.Dentist.Id, opt=>opt.MapFrom(s=>s.DentistId))
+                                                      .ReverseMap();
         }
     }
 }

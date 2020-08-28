@@ -10,6 +10,7 @@ namespace DentistApp.Application.ViewModels
 {
     public class AddressVM : IMapFrom<Address>
     {
+        public int Id { get; set; }
         public int PatientId { get; set; }
         public int Building { get; set; }
         public int? Apartment { get; set; }

@@ -40,10 +40,10 @@ namespace DentistApp.Infrastructure.Repositories
         {
             return _context.Patients.SingleOrDefault(v => v.Id == patientId);
         }
-        public Patient GetByIdWithAddress(int patientId)
-        {
-            return _context.Patients.Include(p => p.Address).SingleOrDefault(v => v.Id == patientId);
-        }
+        //public Patient GetByIdWithAddress(int patientId)
+        //{
+        //    return _context.Patients.Include(p => p.Address).SingleOrDefault(v => v.Id == patientId);
+        //}
 
         public async Task Update(Patient patient)
         {

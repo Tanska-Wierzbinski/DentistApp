@@ -10,7 +10,7 @@ namespace DentistApp.Infrastructure.DTOs
         public int Id { get; set; }
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
-        public Office VisitOffice { get; set; }
+        //public Office VisitOffice { get; set; }
         public int PatientId { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }

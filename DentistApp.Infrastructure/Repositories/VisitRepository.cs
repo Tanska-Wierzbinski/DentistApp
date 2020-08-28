@@ -32,7 +32,8 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Visit> GetAll()
         {
-            return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist);
+            //return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist);
+            return _context.Visits;
         }
 
         public Visit GetById(int visitId)
@@ -40,19 +41,23 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Visits.SingleOrDefault(v => v.Id == visitId);
         }
 
-        public Visit GetByIdForCancel(int visitId)
-        {
-            return _context.Visits.Include(p => p.Patient).SingleOrDefault(v => v.Id == visitId);
-        }
+        //public Visit GetByIdForCancel(int visitId)
+        //{
+        //    //return _context.Visits.Include(p => p.Patient).SingleOrDefault(v => v.Id == visitId);
+        //    return _context.Visits.SingleOrDefault(v => v.Id == visitId);
+        //}
 
-        public Visit GetByIdWithDentistAndPatient(int visitId)
-        {
-            return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist).SingleOrDefault(v => v.Id == visitId);
-        }
+        //public Visit GetByIdWithDentistAndPatient(int visitId)
+        //{
+
+        //    //return _context.Visits.Include(p => p.Patient).Include(d => d.Dentist).SingleOrDefault(v => v.Id == visitId);
+
+        //    return _context.Visits.SingleOrDefault(v => v.Id == visitId);
+        //}
 
         public IQueryable<Visit> GetForDate(DateTime date)
         {
-            return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date)).Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
+            return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date));//.Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
         }
         public IQueryable<Visit> GetForDateTime(DateTime date)
         {
@@ -66,13 +71,14 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Visit> GetForPatient(int patientId)
         {
-            return _context.Visits.Where(v => v.PatientId == patientId).Include(d=>d.Dentist);
+            //return _context.Visits.Where(v => v.PatientId == patientId).Include(d=>d.Dentist);
+            return _context.Visits.Where(v => v.PatientId == patientId);
         }
 
-        public async Task Update(Visit visit)
+        public void Update(Visit visit)
         {
             _context.Visits.Update(visit);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

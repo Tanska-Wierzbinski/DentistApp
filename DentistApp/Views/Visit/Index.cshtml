@@ -51,10 +51,10 @@
                             @Html.DisplayFor(modelItem => v.VisitStatus)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => v.PatientFullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
+                            @Html.DisplayFor(modelItem => v.Patient.FullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => v.DentistFullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
+                            @Html.DisplayFor(modelItem => v.Dentist.FullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
                         </td>
                         <td>
                             @*@Html.ActionLink("Edit", "Edit", new { id = v.Id }) |

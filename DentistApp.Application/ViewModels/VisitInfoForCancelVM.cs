@@ -14,17 +14,15 @@ namespace DentistApp.Application.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
-        public string PatientName { get; set; }
-        public string PatientLastName { get; set; }
-        public string PatientFullName
-        {
-            get { return PatientName + " " + PatientLastName; }
-        }
+        public int PatientId { get; set; }
+        public PatientBasicInfoVM Patient { get; set; }
+       
 
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, VisitInfoForCancelVM>().ReverseMap();
+            profile.CreateMap<Visit, VisitInfoForCancelVM>()//.ForMember(p=>p.Patient.Id, opt=>opt.MapFrom(s=>s.PatientId))
+                .ReverseMap();
         }
     }
 }

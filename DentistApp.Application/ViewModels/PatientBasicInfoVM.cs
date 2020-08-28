@@ -13,10 +13,14 @@ namespace DentistApp.Application.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
+        public string FullName
+        {
+            get { return Name + " " + LastName; }
+        }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Patient, PatientBasicInfoVM>().ReverseMap();
+            profile.CreateMap<Patient, PatientBasicInfoVM>().ForMember(p => p.FullName, opt => opt.Ignore()).ReverseMap();
         }
     }
 }

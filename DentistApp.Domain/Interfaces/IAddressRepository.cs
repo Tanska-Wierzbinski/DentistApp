@@ -10,7 +10,7 @@ namespace DentistApp.Domain.Interfaces
     {
         Address GetById(int addressId);
         Task Add(Address address);
-        Task Update(Address address);
+        void Update(Address address);
         Task Delete(int addressId);
     }
 }

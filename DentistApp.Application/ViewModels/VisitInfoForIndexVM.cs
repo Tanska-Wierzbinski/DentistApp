@@ -14,31 +14,22 @@ namespace DentistApp.Application.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
-     
-        public string PatientName { get; set; }
-        public string PatientLastName { get; set; }
+        public string Diagnosis { get; set; }
+        public string Procedure { get; set; }
+        public DentistBasicInfoVM Dentist { get; set; }
+        public PatientBasicInfoVM Patient { get; set; }
 
-        public int PatientId { get; set; }
         public int DentistId { get; set; }
-        public string DentistName { get; set; }
-        public string DentistLastName { get; set; }
-        public string PatientFullName
-        {
-            get { return PatientName + " " + PatientLastName; }
-        }
-        public string DentistFullName
-        {
-            get { return DentistName + " " + DentistLastName; }
-        }
+        public int PatientId { get; set; }
+
+
 
 
         public void Mapping(Profile profile)
         {
-             profile.CreateMap<Visit, VisitInfoForIndexVM>().ForMember(d => d.PatientLastName, opt => opt.MapFrom(s => s.Patient.LastName))
-                                                    .ForMember(d => d.PatientName, opt => opt.MapFrom(s => s.Patient.Name))
-                                                    .ForMember(d => d.DentistName, opt => opt.MapFrom(s => s.Dentist.Name))
-                                                    .ForMember(d => d.DentistLastName, opt => opt.MapFrom(s => s.Dentist.LastName))
-                                                    .ReverseMap();
+             profile.CreateMap<Visit, VisitInfoForIndexVM>()//.ForMember(d => d.Patient.Id, opt => opt.MapFrom(s=>s.PatientId))
+                                                            //.ForMember(d => d.Dentist.Id, opt => opt.MapFrom(s => s.DentistId))
+                                                            .ReverseMap();
 
         }
     }

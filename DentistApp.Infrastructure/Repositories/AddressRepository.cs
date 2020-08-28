@@ -30,15 +30,15 @@ namespace DentistApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Address GetById(int addressId)
+        public Address GetById(int patientId)
         {
-            return  _context.Addresses.SingleOrDefault(a => a.PatientId == addressId);
+            return  _context.Addresses.SingleOrDefault(a => a.PatientId == patientId);
         }
 
-        public async Task Update(Address address)
+        public void Update(Address address)
         {
             _context.Addresses.Update(address);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

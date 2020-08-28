@@ -3,10 +3,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DentistApp.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PatientId = table.Column<int>(nullable: false),
+                    Building = table.Column<int>(nullable: false),
+                    Apartment = table.Column<int>(nullable: true),
+                    Street = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    PostalCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -77,6 +95,24 @@ namespace DentistApp.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Patients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Visits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VisitDate = table.Column<DateTime>(nullable: false),
+                    VisitStatus = table.Column<int>(nullable: false),
+                    Diagnosis = table.Column<string>(nullable: true),
+                    Procedure = table.Column<string>(nullable: true),
+                    DentistId = table.Column<int>(nullable: false),
+                    PatientId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visits", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,59 +221,6 @@ namespace DentistApp.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    PatientId = table.Column<int>(nullable: false),
-                    Building = table.Column<int>(nullable: false),
-                    Apartment = table.Column<int>(nullable: true),
-                    Street = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    PostalCode = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.PatientId);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Visits",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitDate = table.Column<DateTime>(nullable: false),
-                    VisitStatus = table.Column<int>(nullable: false),
-                    VisitOffice = table.Column<int>(nullable: false),
-                    Diagnosis = table.Column<string>(nullable: true),
-                    Procedure = table.Column<string>(nullable: true),
-                    DentistId = table.Column<int>(nullable: false),
-                    PatientId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Visits", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Visits_Dentists_DentistId",
-                        column: x => x.DentistId,
-                        principalTable: "Dentists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Visits_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -276,16 +259,6 @@ namespace DentistApp.Infrastructure.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Visits_DentistId",
-                table: "Visits",
-                column: "DentistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Visits_PatientId",
-                table: "Visits",
-                column: "PatientId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -309,6 +282,12 @@ namespace DentistApp.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Dentists");
+
+            migrationBuilder.DropTable(
+                name: "Patients");
+
+            migrationBuilder.DropTable(
                 name: "Visits");
 
             migrationBuilder.DropTable(
@@ -316,12 +295,6 @@ namespace DentistApp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Dentists");
-
-            migrationBuilder.DropTable(
-                name: "Patients");
         }
     }
 }

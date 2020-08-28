@@ -21,8 +21,10 @@ namespace DentistApp.Infrastructure.Migrations
 
             modelBuilder.Entity("DentistApp.Domain.Models.Address", b =>
                 {
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("Apartment")
                         .HasColumnType("int");
@@ -33,13 +35,16 @@ namespace DentistApp.Infrastructure.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PatientId");
+                    b.HasKey("Id");
 
                     b.ToTable("Addresses");
                 });
@@ -117,17 +122,10 @@ namespace DentistApp.Infrastructure.Migrations
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitOffice")
-                        .HasColumnType("int");
-
                     b.Property<int>("VisitStatus")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DentistId");
-
-                    b.HasIndex("PatientId");
 
                     b.ToTable("Visits");
                 });
@@ -330,30 +328,6 @@ namespace DentistApp.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("DentistApp.Domain.Models.Address", b =>
-                {
-                    b.HasOne("DentistApp.Domain.Models.Patient", "Patient")
-                        .WithOne("Address")
-                        .HasForeignKey("DentistApp.Domain.Models.Address", "PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DentistApp.Domain.Models.Visit", b =>
-                {
-                    b.HasOne("DentistApp.Domain.Models.Dentist", "Dentist")
-                        .WithMany()
-                        .HasForeignKey("DentistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DentistApp.Domain.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,11 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Visits for today</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@*<p>
+    <a asp-action="Create">Add</a>
+</p>*@
+<div class="row">
+    <div class="col">
+
+    </div>
+    <div class="col">
+
+    </div>
+    <div class="col">
+
+    </div>
+</div>
 
 
 <div class="border border-primary p-3 row" style="background-color:whitesmoke; color:cornflowerblue; justify-content:space-between;">
@@ -60,10 +71,10 @@
                         @Html.DisplayFor(modelItem => v.VisitStatus)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => v.PatientFullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
+                        @Html.DisplayFor(modelItem => v.Patient.FullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => v.DentistFullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
+                        @Html.DisplayFor(modelItem => v.Dentist.FullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
                     </td>
                     <td>
                         @*@Html.ActionLink("Edit", "Edit", new { id = v.Id }) |

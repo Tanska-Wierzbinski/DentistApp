@@ -9,6 +9,6 @@ namespace DentistApp.Domain.Models
     {
         public string PESEL { get; set; }
         public DateTime BirthDate { get; set; }
-        public Address Address { get; set; }
+        //public Address Address { get; set; }
     }
 }

@@ -17,10 +17,10 @@ namespace DentistApp.Domain.Interfaces
         IQueryable<Visit> GetForPatient(int patientId);
         IQueryable<Visit> GetForDentist(int dentistId);
         Visit GetById(int visitId);
-        Visit GetByIdForCancel(int visitId);
-        Visit GetByIdWithDentistAndPatient(int visitId);
+        //Visit GetByIdForCancel(int visitId);
+        //Visit GetByIdWithDentistAndPatient(int visitId);
         Task Add(Visit visit);
-        Task Update(Visit visit);
+        void Update(Visit visit);
         Task Delete(int visitId);
 
 
