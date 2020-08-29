@@ -10,7 +10,76 @@
     <a class="btn btn-outline-primary" asp-action="Create">Create New</a>
 </p>
 
-@foreach (var d in Model.Dates)
+<form asp-action="Index" method="get" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row align-items-end">
+        <div class="form-group col-auto">
+            <label asp-for="DateMin" class="control-label"></label>
+            <input type="date" name="dateMin" asp-for="DateMin" class="form-control" max="@DateTime.Now.AddYears(5).ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DateMin" class="text-danger"></span>
+        </div>
+        <div class="form-group col-auto">
+            <label asp-for="DateMax" class="control-label"></label>
+            <input type="date" name="dateMax" asp-for="DateMax" class="form-control" max="@DateTime.Now.AddYears(5).ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DateMax" class="text-danger"></span>
+        </div>
+        <div class="form-group col-auto">
+            <label asp-for="DentistId" class="control-label"></label>
+            <select name="dentistId" asp-for="DentistId" asp-items="Model.Dentists" class="form-control"></select>
+        </div>
+        <div class="form-group col-auto">
+            <label asp-for="InFuture" class="control-label"></label>
+            <input asp-for="InFuture" type="checkbox" class="form-control" />
+        </div>
+
+        <div class="form-group col-auto">
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+        <div class="form-group col-auto">
+            <a asp-action="Index" class="btn btn-primary">Clear filter</a>
+        </div>
+    </div>
+</form>
+
+<div class="dropdown mb-2">
+    <button class="btn btn-primary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        sort
+    </button>
+    <div class="dropdown-menu">
+
+        <div class="row">
+            <div class="col-sm">
+                <a class="dropdown-item-text" style="color:dimgray">visit date</a>
+            </div>
+
+            <div class="col-auto">
+                <a class="dropdown-item" asp-action="Index" asp-route-sortOrder=""
+                                         asp-route-dateMin="@Model.DateMin.ToString("yyyy-MM-dd")"
+                                         asp-route-dateMax="@Model.DateMax.ToString("yyyy-MM-dd")"
+                                         asp-route-dentistId="@Model.DentistId"
+                                         asp-route-inFuture="@Model.InFuture">ascending</a>
+                <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="descending"
+                                         asp-route-dateMin="@Model.DateMin.ToString("yyyy-MM-dd")"
+                                         asp-route-dateMax="@Model.DateMax.ToString("yyyy-MM-dd")"
+                                         asp-route-dentistId="@Model.DentistId"
+                                         asp-route-inFuture="@Model.InFuture">descending</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@{var displayMessage = Model.Visits.Any() ? "display:none" : ""; }
+
+<div class="alert alert-danger" style="@displayMessage" role="alert">
+    <h4 class="alert-heading">Ajjjj karamba!</h4>
+    <p>No visits with this filter</p>
+    <hr>
+    <p class="mb-0"></p>
+</div>
+
+
+@foreach (var d in Model.PaginatedDates)
 {
     <h4 class="border border-primary p-3 text-center" style="background-color:whitesmoke; color:cornflowerblue">
         @{ var day = d.ToString("dd MMMM yyyy");
@@ -58,14 +127,14 @@
                         </td>
                         <td>
                             @*@Html.ActionLink("Edit", "Edit", new { id = v.Id }) |
-        @Html.ActionLink("Details", "Details", new { id = v.Id }) |
-        @Html.ActionLink("Cancel", "Cancel", new { id = v.Id })*@
+                                @Html.ActionLink("Details", "Details", new { id = v.Id }) |
+                                @Html.ActionLink("Cancel", "Cancel", new { id = v.Id })*@
 
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@v.Id">Details</a>
                             <a class="btn btn-primary" asp-action="Edit" asp-route-id="@v.Id">Edit</a>
                             @{var isAvailable = (v.VisitDate < DateTime.Now) || (v.VisitStatus.ToString() == "Canceled") ? "display:none" : ""; }
                             <a style="@isAvailable" class="btn btn-primary" asp-action="Cancel" asp-route-id="@v.Id">Cancel</a>
-                            
+
                         </td>
                     </tr>
                 </tbody>
@@ -76,57 +145,89 @@
     </table>
 }
 
+@{
+    var prevDisabled = !Model.PaginatedDates.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.PaginatedDates.HasNextPage ? "disabled" : "";
+    //var next = @Model.PaginatedDates.PageIndex + 1;
+    //var previous = @Model.PaginatedDates.PageIndex - 1;
 
+
+    <div>
+        <input type="hidden" asp-for="DateMin" value="@Model.DateMin" />
+        <input type="hidden" asp-for="DateMax" value="@Model.DateMax" />
+        <input type="hidden" asp-for="DentistId" value="@Model.DentistId" />
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PaginatedDates.PageIndex - 1)"
+           asp-route-dateMin="@Model.DateMin.ToString("yyyy-MM-dd")"
+           asp-route-dateMax="@Model.DateMax.ToString("yyyy-MM-dd")"
+           asp-route-dentistId="@Model.DentistId"
+           asp-route-inFuture="@Model.InFuture"
+           asp-route-sortOrder="@Model.SortOrder"
+           class="btn btn-dark @prevDisabled" id="previous">
+            previous
+        </a>
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PaginatedDates.PageIndex + 1)"
+           asp-route-dateMin="@Model.DateMin.ToString("yyyy-MM-dd")"
+           asp-route-dateMax="@Model.DateMax.ToString("yyyy-MM-dd")"
+           asp-route-dentistId="@Model.DentistId"
+           asp-route-inFuture="@Model.InFuture"
+           asp-route-sortOrder="@Model.SortOrder"
+           class="btn btn-dark @nextDisabled" id="next">
+            next
+        </a>
+    </div>
+}
 
 
 @*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Date
-            </th>
-            <th>
-                Time
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                Patient
-            </th>
-            <th>
-                Dentist
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Visits)
-        {
+        <thead>
             <tr>
-                <td>
-                    @{ var date = item.VisitDate.ToString("dd/MM/yyyy");
-                        @Html.DisplayFor(modelItem => date)}
-                </td>
-                <td>
-                    @{ var timeofday = item.VisitDate.ToString("HH:mm");
-                        @Html.DisplayFor(modelItem => timeofday)}
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VisitStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PatientFullName) 
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DentistFullName) 
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                   
-                </td>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Time
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Patient
+                </th>
+                <th>
+                    Dentist
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>*@
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Visits)
+            {
+                <tr>
+                    <td>
+                        @{ var date = item.VisitDate.ToString("dd/MM/yyyy");
+                            @Html.DisplayFor(modelItem => date)}
+                    </td>
+                    <td>
+                        @{ var timeofday = item.VisitDate.ToString("HH:mm");
+                            @Html.DisplayFor(modelItem => timeofday)}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VisitStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PatientFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DentistFullName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@

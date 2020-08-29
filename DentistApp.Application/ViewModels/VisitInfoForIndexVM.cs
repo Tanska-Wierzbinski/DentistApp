@@ -11,7 +11,7 @@ namespace DentistApp.Application.ViewModels
     public class VisitInfoForIndexVM : IMapFrom<Visit>
     {
         public int Id { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime VisitDate { get; set; }
         public Status VisitStatus { get; set; }
         public string Diagnosis { get; set; }

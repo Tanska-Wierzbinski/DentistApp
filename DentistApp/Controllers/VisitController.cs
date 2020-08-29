@@ -20,10 +20,10 @@ namespace DentistApp.Controllers
             _logger = logger;
         }
         // GET: VisitController
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture)
         {
 
-            return View(_service.GetAllVisits());
+            return View(_service.GetAllVisits(sortOrder, pageNumber, dateMin, dateMax, dentistId, inFuture));
         }
 
         // GET: VisitController/Details/5
@@ -97,7 +97,7 @@ namespace DentistApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Cancel(int id, IFormCollection collection)
         {
-           await  _service.Cancel_Post(id);
+           _service.Cancel_Post(id);
             return RedirectToAction(nameof(Index));
 
         }

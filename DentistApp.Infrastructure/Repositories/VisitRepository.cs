@@ -33,7 +33,7 @@ namespace DentistApp.Infrastructure.Repositories
         public IQueryable<Visit> GetAll()
         {
             //return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist);
-            return _context.Visits;
+            return _context.Visits.AsNoTracking();
         }
 
         public Visit GetById(int visitId)
