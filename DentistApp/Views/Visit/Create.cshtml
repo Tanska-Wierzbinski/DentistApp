@@ -44,7 +44,11 @@
     <div class="col-md-4">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @{ var message = Model.AvailableVisits.Any() ? "Available visits at:" : "No available visits";}
+            <h4 class="mb-3">@message</h4>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+
                 @foreach (var visit in Model.AvailableVisits)
                 {
                     <label class="btn btn-outline-primary">
@@ -63,15 +67,16 @@
             <input type="hidden" asp-for="DentistId" value="@Model.DentistId" />
 
             <div class="form-group">
-                <input type="submit" value="Add visit" class="btn btn-primary" />
+                <input type="submit" value="Add visit" class="btn btn-outline-primary" />
+                <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
+@*<div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

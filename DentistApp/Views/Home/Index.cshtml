@@ -9,15 +9,14 @@
 @*<p>
     <a asp-action="Create">Add</a>
 </p>*@
-<div class="row">
-    <div class="col">
-
+<div class="row mb-2">
+    <div class="col ">
+        <a class="float-left btn btn-outline-primary" asp-controller="Visit" asp-action="Create">Add visit</a>
     </div>
     <div class="col">
-
+       
     </div>
     <div class="col">
-
     </div>
 </div>
 
@@ -81,10 +80,10 @@
                             @Html.ActionLink("Details", "Details", new { id = v.Id }) |
                             @Html.ActionLink("Cancel", "Cancel", new { id = v.Id })*@
 
-                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@v.Id">Details</a>
-                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@v.Id">Edit</a>
+                        <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@v.Id">Details</a>
+                        <a class="btn btn-primary"  asp-controller="Visit" asp-action="Edit" asp-route-id="@v.Id">Edit</a>
                         @{var isAvailable = (v.VisitDate < DateTime.Now) || (v.VisitStatus.ToString() == "Canceled") ? "display:none" : ""; }
-                        <a style="@isAvailable" class="btn btn-primary" asp-action="Cancel" asp-route-id="@v.Id">Cancel</a>
+                        <a style="@isAvailable" class="btn btn-primary"  asp-controller="Visit" asp-action="Cancel" asp-route-id="@v.Id">Cancel</a>
 
                     </td>
                 </tr>
