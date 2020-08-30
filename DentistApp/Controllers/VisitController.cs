@@ -32,6 +32,19 @@ namespace DentistApp.Controllers
             return View(_service.GetVisitDetails(id));
         }
 
+        public ActionResult FirstVisit(PatientForEditVM patient, DateTime? date, int? dentistId)
+        {
+            return View(_service.FirstVisit_Get(patient,date,dentistId));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FirstVisit(IFormCollection collection, FirstVisitVM firstVisit)
+        {
+            _service.FirstVisit_Post(firstVisit);
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: VisitController/Create
         public ActionResult Create(DateTime? date, int? dentistId, string message)
         {

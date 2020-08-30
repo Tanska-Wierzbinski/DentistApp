@@ -20,8 +20,8 @@ namespace DentistApp.Infrastructure.Repositories
 
         public async Task Add(Patient patient)
         {
-            await _context.Patients.AddAsync(patient);
-            await _context.SaveChangesAsync();
+            _context.Patients.Add(patient);
+            _context.SaveChanges();
         }
 
         public async Task Delete(int patientId)
