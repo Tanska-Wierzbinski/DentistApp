@@ -38,12 +38,12 @@ namespace DentistApp.Application.Services
             visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
             return visit;
         }
-        //naprawione
-        public void Cancel_Post(int visitId)
+        //
+        public async Task Cancel_Post(int visitId)
         {
             var visit = _visitRepository.GetById(visitId);
             visit.VisitStatus = Status.Canceled;
-            _visitRepository.Update(visit);
+            await _visitRepository.Update(visit);
 
         }
         //naprawione
@@ -95,7 +95,7 @@ namespace DentistApp.Application.Services
             };
         }
         //naprawione
-        public VisitInfoForIndexListVM GetAllVisits(string sortOrder, int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture)
+        public async Task<VisitInfoForIndexListVM> GetAllVisits(string sortOrder, int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture)
         {
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "" : sortOrder;
             var temporaryVisits = _visitRepository.GetAll().ProjectTo<VisitInfoForIndexVM>(_mapper.ConfigurationProvider);
@@ -139,13 +139,13 @@ namespace DentistApp.Application.Services
                 {
                     visit.VisitStatus = Status.InProgress;
                     var v = _mapper.Map<Visit>(visit);
-                    _visitRepository.Update(v);
+                    await _visitRepository.Update(v);
                 }
                 else if (DateTime.Now >= visit.VisitDate.AddMinutes(30) && visit.VisitStatus != Status.Canceled && visit.VisitStatus != Status.Done)
                 {
                     visit.VisitStatus = Status.Done;
                     var v = _mapper.Map<Visit>(visit);
-                    _visitRepository.Update(v);
+                    await _visitRepository.Update(v);
                 }
             }
             var dentists = _dentistRepository.GetAll().ProjectTo<DentistBasicInfoVM>(_mapper.ConfigurationProvider);

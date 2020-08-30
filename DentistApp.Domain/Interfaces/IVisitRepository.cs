@@ -20,7 +20,7 @@ namespace DentistApp.Domain.Interfaces
         //Visit GetByIdForCancel(int visitId);
         //Visit GetByIdWithDentistAndPatient(int visitId);
         Task Add(Visit visit);
-        void Update(Visit visit);
+        Task Update(Visit visit);
         Task Delete(int visitId);
 
 

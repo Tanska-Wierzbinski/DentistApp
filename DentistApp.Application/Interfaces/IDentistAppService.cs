@@ -11,11 +11,11 @@ namespace DentistApp.Application.Interfaces
     public interface IDentistAppService
     {
         VisitForDateListVM GetVisitsForDate(DateTime date);
-        VisitInfoForIndexListVM GetAllVisits(string sortOrder,int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture);
+        Task<VisitInfoForIndexListVM> GetAllVisits(string sortOrder,int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture);
         VisitInfoForDetailsVM GetVisitDetails(int visitId);
         Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit);
         VisitInfoForCancelVM Cancel_Get(int visitId);
-        void Cancel_Post(int visitId);
+        Task Cancel_Post(int visitId);
 
         TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId);
         Task<int> AddVisit_Post(TemporaryVisitVM tempVisit);

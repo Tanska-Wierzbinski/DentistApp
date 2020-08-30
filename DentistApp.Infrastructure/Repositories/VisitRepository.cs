@@ -75,10 +75,12 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Visits.Where(v => v.PatientId == patientId);
         }
 
-        public void Update(Visit visit)
+        public async Task Update(Visit visit)
         {
+            
             _context.Visits.Update(visit);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            
         }
     }
 }
