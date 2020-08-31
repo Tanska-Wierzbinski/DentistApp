@@ -18,9 +18,9 @@ namespace DentistApp.Controllers
             _logger = logger;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_service.GetVisitsForDate(DateTime.Now));
+            return View(await _service.GetVisitsForDate(DateTime.Now));
         }
 
         public IActionResult Privacy()

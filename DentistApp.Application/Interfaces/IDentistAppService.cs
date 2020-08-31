@@ -10,7 +10,7 @@ namespace DentistApp.Application.Interfaces
 {
     public interface IDentistAppService
     {
-        VisitForDateListVM GetVisitsForDate(DateTime date);
+        Task<VisitForDateListVM> GetVisitsForDate(DateTime date);
         Task<VisitInfoForIndexListVM> GetAllVisits(string sortOrder,int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture);
         VisitInfoForDetailsVM GetVisitDetails(int visitId);
         Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit);

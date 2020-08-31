@@ -40,10 +40,10 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Dentists.SingleOrDefault(d => d.Id == dentistId);
         }
 
-        public void Update(Dentist dentist)
+        public async Task Update(Dentist dentist)
         {
             _context.Dentists.Update(dentist);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

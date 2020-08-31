@@ -99,7 +99,7 @@ namespace DentistApp.Controllers
         {
             
            await _service.Cancel_Post(id);
-            return RedirectToAction(nameof(Index));
+           return RedirectToAction(nameof(Index));
 
         }
     }

@@ -35,10 +35,10 @@ namespace DentistApp.Infrastructure.Repositories
             return  _context.Addresses.SingleOrDefault(a => a.PatientId == patientId);
         }
 
-        public void Update(Address address)
+        public async Task Update(Address address)
         {
             _context.Addresses.Update(address);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
