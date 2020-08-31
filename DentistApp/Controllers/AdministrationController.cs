@@ -1,4 +1,5 @@
-﻿using DentistApp.Application.ViewModels;
+﻿using AutoMapper;
+using DentistApp.Application.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,11 +13,13 @@ namespace DentistApp.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IMapper mapper)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -169,6 +172,39 @@ namespace DentistApp.Controllers
                 }
             }
             return RedirectToAction("EditRole", new { Id = roleId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteRole(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            var deleteRole = new RoleForDeleteVM
+            {
+                Id = role.Id,
+                Name = role.Name
+            };
+
+            return View(deleteRole);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteRole(RoleForDeleteVM deleteRole)
+        {
+            //var result = await _roleManager.DeleteAsync(role);
+
+            var role = await _roleManager.FindByIdAsync(deleteRole.Id);
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ListOfRoles", "Administration");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(role);
         }
     }
 }

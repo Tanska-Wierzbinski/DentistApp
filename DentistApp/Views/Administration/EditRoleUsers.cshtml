@@ -6,7 +6,7 @@
     var roleId = ViewBag.roleId;
 }
 
-<h1>Edit users is role</h1>
+<h1>Edit users in role</h1>
 
 <form method="post">
 
@@ -21,11 +21,7 @@
     }
 
 
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
+    <div class="form-group mt-3">
+        <input type="submit" value="Save" class="btn btn-outline-primary" /> <a class="btn btn-outline-dark" asp-controller="Administration" asp-action="EditRole" asp-route-id="@roleId">Back to List</a>
     </div>
 </form>
-
-<div>
-    <a asp-controller="Administration" asp-action="EditRole" asp-route-id="@roleId">Back to List</a>
-</div>
