@@ -24,6 +24,9 @@ namespace DentistApp.Application.Interfaces
         PatientForEditVM EditPatient_Get(int patientId);
         Task EditPatient_Post(PatientForEditVM patient);
 
+        FirstVisitVM FirstVisit_Get(PatientForEditVM patient, DateTime? date, int? dentistId);
+        Task<int> FirstVisit_Post(FirstVisitVM firstVisit);
+
         PatientInfoForIndexListVM GetAllPatient();
         PatientCardVM GetPatientCard(int patientId);
 

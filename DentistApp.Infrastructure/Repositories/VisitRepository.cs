@@ -19,8 +19,8 @@ namespace DentistApp.Infrastructure.Repositories
         }
         public async Task Add(Visit visit)
         {
-            await _context.Visits.AddAsync(visit);
-            await _context.SaveChangesAsync();
+            _context.Visits.Add(visit);
+            _context.SaveChanges();
         }
 
         public async Task Delete(int visitId)

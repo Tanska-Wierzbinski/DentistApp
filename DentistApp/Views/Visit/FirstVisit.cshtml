@@ -1,0 +1,169 @@
+﻿@model DentistApp.Application.ViewModels.FirstVisitVM
+
+@{
+    ViewData["Title"] = "FirstVisit";
+}
+
+<h1>Adding the first visit</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="FirstVisit" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row align-items-end">
+                <div class="form-group col-auto">
+                    <label asp-for="Visit.VisitDate" class="control-label"></label>
+                    <input type="date" name="date" asp-for="Visit.VisitDate" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddYears(5).ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="Visit.VisitDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-auto">
+                    <label asp-for="Visit.DentistId" class="control-label"></label>
+                    <select name="dentistId" asp-for="Visit.DentistId" asp-items="Model.Visit.Dentists" class="form-control"></select>
+                </div>
+
+                <div class="form-group col-auto">
+                    <input type="submit" value="Filter" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*<div class="alert alert-danger" style="@displayMessage" role="alert">
+        <h4 class="alert-heading">Ajjjj karamba!</h4>
+        <p>@ViewBag.Message</p>
+        <hr>
+        <p class="mb-0"></p>
+    </div>*@
+<p></p>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="FirstVisit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                @foreach (var visit in Model.Visit.AvailableVisits)
+                {
+                    <label class="btn btn-outline-primary">
+                        <input asp-for="Visit.TimeOfVisit" type="radio" value="@visit" autocomplete="off" />@visit.ToString(@"hh\:mm")
+                    </label>
+                }
+
+            </div>
+            <p></p>
+
+            <hr style="width:200%"/>
+            @*<div class="form-group">
+            <label asp-for="Visit.PatientId" class="control-label"></label>
+            <select asp-for="Visit.PatientId" asp-items="Model.Visit.Patients" class="form-control"></select>
+        </div>*@
+
+            <input type="hidden" asp-for="Visit.VisitDate" value="@Model.Visit.VisitDate" />
+            <input type="hidden" asp-for="Visit.DentistId" value="@Model.Visit.DentistId" />
+
+
+
+            @*<div class="row">
+        <div class="col-auto">*@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+        <label asp-for="Id" class="control-label"></label>*@
+            <input type="hidden" asp-for="Patient.Id" class="form-control" />
+            @*<span asp-validation-for="Id" class="text-danger"></span>
+        </div>*@
+            <h4>New patient data</h4>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Patient.Name" class="control-label"></label>
+                        <input asp-for="Patient.Name" class="form-control" />
+                        <span asp-validation-for="Patient.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.LastName" class="control-label"></label>
+                        @*@Html.ValidationMessageFor(model=>model.LastName)*@
+                        <input asp-for="Patient.LastName" class="form-control" />
+                        <span asp-validation-for="Patient.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.PhoneNumber" class="control-label"></label>
+                        <input asp-for="Patient.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Patient.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.PESEL" class="control-label"></label>
+                        <input asp-for="Patient.PESEL" class="form-control" />
+                        <span asp-validation-for="Patient.PESEL" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.BirthDate" class="control-label"></label>
+                        <input type="date" asp-for="Patient.BirthDate" class="form-control" min="@DateTime.Today.AddYears(-150).ToString("yyyy-MM-dd")" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="Patient.BirthDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @*</div>*@
+
+                @*<div class="col-auto">*@
+                @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+                <input type="hidden" asp-for="Patient.Address.PatientId" class="form-control" />
+                <div class="col">
+                    <div class="row">
+                        <div class="col" style="width:40%">
+                            <div class="form-group">
+                                <label asp-for="Patient.Address.Building" class="control-label"></label>
+                                <input asp-for="Patient.Address.Building" class="form-control" />
+                                <span asp-validation-for="Patient.Address.Building" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col" style="width:40%">
+                            <div class="form-group">
+                                <label asp-for="Patient.Address.Apartment" class="control-label"></label>
+                                <input asp-for="Patient.Address.Apartment" class="form-control" />
+                                <span asp-validation-for="Patient.Address.Apartment" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label asp-for="Patient.Address.Street" class="control-label"></label>
+                        <input asp-for="Patient.Address.Street" class="form-control" />
+                        <span asp-validation-for="Patient.Address.Street" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.Address.PostalCode" class="control-label"></label>
+                        <input asp-for="Patient.Address.PostalCode" class="form-control" />
+                        <span asp-validation-for="Patient.Address.PostalCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Patient.Address.City" class="control-label"></label>
+                        <input asp-for="Patient.Address.City" class="form-control" />
+                        <span asp-validation-for="Patient.Address.City" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" asp-for="Patient.Address.Id" />
+            
+            @*</div>*@
+
+            @*</div>*@
+
+
+            <div class="form-group">
+                <input type="submit" value="Add first visit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
