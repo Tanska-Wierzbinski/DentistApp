@@ -1,4 +1,8 @@
 ﻿@model DentistApp.Application.ViewModels.VisitInfoForDetailsVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Details";
@@ -7,41 +11,41 @@
 <h1>Details</h1>
 
 @*<div>
-    <h4>VisitInfoForDetailsVM</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VisitDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VisitDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VisitStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VisitStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Diagnosis)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Diagnosis)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Procedure)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Procedure)
-        </dd>
-    </dl>
-</div>*@
+        <h4>VisitInfoForDetailsVM</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.VisitDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.VisitDate)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.VisitStatus)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.VisitStatus)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Diagnosis)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Diagnosis)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Procedure)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Procedure)
+            </dd>
+        </dl>
+    </div>*@
 
 <form asp-action="AddOrEditDiagnosisAndProcedure" method="post">
     <input type="hidden" asp-for="DentistId" />
@@ -73,14 +77,42 @@
         </div>
 
         <div class="card border-primary mr-3 " style="width: 60%;">
-            <div class="card-header"><h4><text style="color:gray">diagnosis </text>  <textarea asp-for="Diagnosis" class="form-control" style="background-color:inherit;border:none;outline:none;box-shadow:none"></textarea></h4></div>
+            <div class="card-header">
+                <h4>
+                    <text style="color:gray">diagnosis </text>
+                    @*@if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Dentist")))*@
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "EditDiagnosisAndProcedure")).Succeeded)
+                    {<textarea asp-for="Diagnosis" class="form-control" style="background-color:inherit;outline:none;box-shadow:none"></textarea>}
+                    else
+                    {
+                        <br />
+                        <h5><text>@Model.Diagnosis</text></h5>
+                    }
+                </h4>
+            </div>
             <div class="card-body text-primary">
-                <h4><text style="color:gray">procedure </text><textarea asp-for="Procedure" class="form-control" style="border:hidden;outline:none;box-shadow:none; color:dodgerblue"></textarea></h4>
+                <h4>
+                    <text style="color:gray">procedure </text>
+                    @*@if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Dentist")))*@
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "EditDiagnosisAndProcedure")).Succeeded)
+                    {
+                        <textarea asp-for="Procedure" class="form-control" style="outline:none;box-shadow:none; color:dodgerblue"></textarea>
+                    }
+                    else
+                    {
+                        <br />
+                        <h5><text>@Model.Procedure</text></h5>
+                    }
+                </h4>
             </div>
-            <div class="card-footer">
-                @*<a class="btn btn-outline-primary" asp-action="AddOrEditDiagnosisAndProcedure" asp-route-visitId="@Model.Id">Add or Edit</a>*@
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            @*@if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Dentist")))*@
+            @if ((await AuthorizationService.AuthorizeAsync(User, "EditDiagnosisAndProcedure")).Succeeded)
+            {
+                <div class="card-footer">
+                    @*<a class="btn btn-outline-primary" asp-action="AddOrEditDiagnosisAndProcedure" asp-route-visitId="@Model.Id">Add or Edit</a>*@
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            }
         </div>
 
         @*<div class="card border-primary mr-3 " style="width: 60%;">
@@ -97,10 +129,20 @@
 </form>
 
 @*<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>*@
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        <a asp-action="Index">Back to List</a>
+    </div>*@
 <div class="row mt-2">
-    <a class="btn btn-outline-primary float-left mr-2"  asp-action="Edit" asp-route-id="@Model.Id">Edit visit</a>
-    <a class="btn btn-outline-dark"  asp-action="Index">Back to visit list</a>
+    @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Secretary")))
+    {
+        <a class="btn btn-outline-primary float-left mr-2" asp-action="Edit" asp-route-id="@Model.Id">Edit visit</a>
+    }
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Reffer))
+    {
+        <a class="btn btn-outline-dark" href="@ViewBag.Reffer">Return to previous page</a>
+    }
+    else
+    {
+    <a class="btn btn-outline-dark" asp-action="Index">Back to list of visits</a>
+    }
 </div>

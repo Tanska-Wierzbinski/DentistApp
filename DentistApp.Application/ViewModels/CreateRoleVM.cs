@@ -8,6 +8,7 @@ namespace DentistApp.Application.ViewModels
     public class CreateRoleVM
     {
         [Required]
+        [Display(Name ="Role name")]
         public string RoleName { get; set; }
     }
 }

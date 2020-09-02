@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DentistApp.Application.Interfaces;
 using DentistApp.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace DentistApp.Controllers
 {
+    [Authorize(Roles = "Admin,Secretary")]
     public class PatientController : Controller
     {
         private readonly ILogger<PatientController> _logger;
@@ -20,39 +22,38 @@ namespace DentistApp.Controllers
             _logger = logger;
         }
         // GET: PatientController
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_service.GetAllPatient());
         }
+        [AllowAnonymous]
         public ActionResult PatientCard(int patientId)
         {
+            
             return View(_service.GetPatientCard(patientId));
         }
         // GET: PatientController/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             return View();
         }
 
+
         // GET: PatientController/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new PatientForEditVM() { BirthDate = DateTime.Today });
         }
 
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection, PatientForEditVM newPatient)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.AddPatient_Post(newPatient);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PatientController/Edit/5

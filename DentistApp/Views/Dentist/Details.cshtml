@@ -1,0 +1,87 @@
+﻿@model DentistApp.Application.ViewModels.DentistInfoForDetailsVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div class="row">
+    <div class="card border-primary mr-3" style="width:auto; max-width: 30rem;">
+        <div class="card-header"><h4>Dentist</h4></div>
+        <div class="card-body text-primary">
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">name</text></dt>
+                <dd class="col-auto">@Html.DisplayFor(model => Model.Dentist.Name)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">last name</text></dt>
+                <dd class="col-auto">@Html.DisplayFor(model => Model.Dentist.LastName)</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-5"><text style="color:gray">phone number</text></dt>
+                <dd class="col-auto">@Html.DisplayFor(model => Model.Dentist.PhoneNumber)</dd>
+            </dl>
+            <dl class="row" style=" display:flex; flex-direction:row; flex-flow:row; justify-content:flex-start">
+                <dt class="col-sm-5" style="margin:auto"><text style="color:gray">email</text></dt>
+                <dd class="col-auto" style="margin:auto">@Html.DisplayFor(model => Model.Dentist.Email)</dd>
+            </dl>
+        </div>
+    </div>
+
+
+    <div class="card border-primary mr-3" style="max-width: 30rem;">
+        <div class="card-header"><h4>History of visits</h4></div>
+        <div class="card-body text-primary">
+            <table class="table">
+                <thead>
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Patient
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div style=" height: 200px; overflow-y: scroll;">
+                <table class="table">
+                    <tbody>
+                        @foreach (var item in Model.Visits)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitStatus)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Patient.FullName)
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin") )
+    {
+        <a class="btn btn-outline-primary float-left mr-2" asp-action="Edit" asp-route-id="@Model.Dentist.Id">Edit dentist</a>
+    }
+    <a class="btn btn-outline-dark" asp-action="Index">Back to list of dentists</a>
+</div>

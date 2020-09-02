@@ -13,6 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DentistApp.Infrastructure;
 using DentistApp.Application;
+using DentistApp.Security;
+using Microsoft.AspNetCore.Authorization;
+using DentistApp.Application.Interfaces;
+using DentistApp.Application.Services;
 
 namespace DentistApp
 {
@@ -34,6 +38,13 @@ namespace DentistApp
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Context>();
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<Context>();
+            services.AddHttpContextAccessor();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("EditDiagnosisAndProcedure", policy => policy.AddRequirements(new ManageDentistNameRequirement()));
+            });
+
+            services.AddTransient<IAuthorizationHandler, CanEditOnlyOwnDiagnosisAndProceduresHandler>();
             services.AddApplication();
             services.AddInfrastructure();
             services.AddControllersWithViews();

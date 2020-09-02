@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DentistApp.Application.Mapping;
 using DentistApp.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using static DentistApp.Application.Mapping.IMapFrom;
 
 namespace DentistApp.Application.ViewModels
 {
-    public class VisitInfoForCancelVM : IMapFrom<Visit>
+    public class VisitInfoForDentistDetailsVM : IMapFrom<Visit>
     {
         public int Id { get; set; }
 
@@ -20,13 +21,10 @@ namespace DentistApp.Application.ViewModels
         public Status VisitStatus { get; set; }
         public int PatientId { get; set; }
         public PatientBasicInfoVM Patient { get; set; }
-       
-
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, VisitInfoForCancelVM>()//.ForMember(p=>p.Patient.Id, opt=>opt.MapFrom(s=>s.PatientId))
-                .ReverseMap();
+            profile.CreateMap<Visit, VisitInfoForDentistDetailsVM>().ForMember(v=>v.Patient, opt=>opt.Ignore()).ReverseMap();
         }
     }
 }

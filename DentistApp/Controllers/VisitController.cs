@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DentistApp.Application.Interfaces;
 using DentistApp.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace DentistApp.Controllers
 {
+    [Authorize(Roles = "Admin,Secretary")]
     public class VisitController : Controller
     {
         private readonly ILogger<VisitController> _logger;
@@ -20,6 +22,7 @@ namespace DentistApp.Controllers
             _logger = logger;
         }
         // GET: VisitController
+        [AllowAnonymous]
         public async Task<ActionResult> Index(string sortOrder, int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture)
         {
 
@@ -27,11 +30,18 @@ namespace DentistApp.Controllers
         }
 
         // GET: VisitController/Details/5
+        [AllowAnonymous]
+        [Authorize(Policy = "EditDiagnosisAndProcedure")]
         public ActionResult Details(int id)
         {
+            if (!string.IsNullOrEmpty(Request.Headers["Referer"]))
+            {
+                ViewBag.Reffer = Request.Headers["Referer"].ToString();
+            }
             return View(_service.GetVisitDetails(id));
         }
 
+        //GET: VisitController
         public ActionResult FirstVisit(PatientForEditVM patient, DateTime? date, int? dentistId)
         {
             return View(_service.FirstVisit_Get(patient,date,dentistId));
@@ -41,7 +51,7 @@ namespace DentistApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> FirstVisit(IFormCollection collection, FirstVisitVM firstVisit)
         {
-            _service.FirstVisit_Post(firstVisit);
+            await _service.FirstVisit_Post(firstVisit);
             return RedirectToAction(nameof(Index));
         }
 
@@ -92,7 +102,9 @@ namespace DentistApp.Controllers
 
         // POST: VisitController/Edit/5
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "EditDiagnosisAndProcedure")]
         public async Task<ActionResult> AddOrEditDiagnosisAndProcedure(IFormCollection collection, VisitInfoForDetailsVM visit)
         {
             await _service.AddOrEditDiagnosisAndProcedure(visit);

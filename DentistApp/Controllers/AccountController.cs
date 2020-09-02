@@ -65,7 +65,7 @@ namespace DentistApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(LoginVM login)
+        public async Task<ActionResult> Login(LoginVM login, string returnUrl)
         {
             if(ModelState.IsValid)
             {
@@ -73,12 +73,23 @@ namespace DentistApp.Controllers
 
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if(!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
             return View(login);
+        }
+
+        public ActionResult AccessDenied()
+        {
+            return View();
         }
     }
 

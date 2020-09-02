@@ -15,15 +15,20 @@ namespace DentistApp.Application.ViewModels
     public class TemporaryVisitVM : IMapFrom<Visit>
     {
         public int? Id { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DisplayName("Visit date")]
         public DateTime VisitDate { get; set; }
+
         [DisplayFormat(DataFormatString ="{0:HH:mm}")]
         public TimeSpan TimeOfVisit { get; set; }
+
         [DisplayName("Dentist")]
         public int DentistId { get; set; }
+
         [DisplayName("Patient")]
         public int PatientId { get; set; }
+
         public List<SelectListItem> Patients { get; set; }
         public List<SelectListItem> Dentists { get; set; }
         public List<TimeSpan> AvailableVisits { get; set; }

@@ -13,11 +13,14 @@ namespace DentistApp.Application.ViewModels
         public int Id { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Visit date")]
         public DateTime VisitDate { get; set; }
+
+        [Display(Name = "Visit status")]
         public Status VisitStatus { get; set; }
+
         public int DentistId { get; set; }
         public DentistBasicInfoVM Dentist { get; set; }
-        //public int DentistId { get; set; }
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Visit, VisitInfoForPatientCardVM>()//.ForMember(v=>v.Dentist.Id, opt=>opt.MapFrom(s=>s.DentistId))

@@ -1,4 +1,6 @@
 ﻿@model DentistApp.Application.ViewModels.PatientCardVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
 
 @{
     ViewData["Title"] = "PatientCard";
@@ -60,7 +62,7 @@
 
     <div class="card border-primary mr-3" style="max-width: 30rem;">
         <div class="card-header"><h4>History of visits</h4></div>
-        <div class="card-body text-primary" >
+        <div class="card-body text-primary">
             <table class="table">
                 <thead data-target="#navbar-example2">
                     <tr>
@@ -78,30 +80,30 @@
                     </tr>
                 </thead>
             </table>
-            <div  style=" height: 200px; overflow-y: scroll;">
+            <div style=" height: 200px; overflow-y: scroll;">
                 <table class="table">
                     <tbody>
-                    @foreach (var item in Model.Visits)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.VisitDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.VisitStatus)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Dentist)
-                            </td>
-                            <td>
-                                <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        @foreach (var item in Model.Visits)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitStatus)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Dentist)
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
-            
+
         </div>
     </div>
 
@@ -111,6 +113,9 @@
 </div>
 
 <div class="row mt-2">
-    <a class="btn btn-outline-primary float-left mr-2"  asp-action="Edit" asp-route-id="@Model.Patient.Id">Edit patient</a>
-    <a class="btn btn-outline-dark"  asp-action="Index">Back to patient list</a>
+    @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Secretary")))
+    {
+        <a class="btn btn-outline-primary float-left mr-2" asp-action="Edit" asp-route-id="@Model.Patient.Id">Edit patient</a>
+    }
+    <a class="btn btn-outline-dark" asp-action="Index">Back to patient list</a>
 </div>

@@ -12,12 +12,18 @@ namespace DentistApp.Application.ViewModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Full name")]
         public string FullName
         {
             get { return Name + " " + LastName; }
         }
+
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Next visit")]
         public DateTime? NextVisit { get; set; }
 
         public void Mapping(Profile profile)

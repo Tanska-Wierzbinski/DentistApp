@@ -9,27 +9,30 @@ namespace DentistApp.Domain.Models
     public enum Status
     {
         Booked,
+
+        [Display(Name = "In progress")]
         InProgress,
+
         Canceled,
         Done
     }
-    //public enum Office
-    //{
-    //    Office1,
-    //    Office2,
-    //    Office3,
-    //    Office4
 
-    //}
     public class Visit
     {
         public int Id { get; set; }
+
+        [Display(Name = "Visit date")]
         public DateTime VisitDate { get; set; }
+
+        [Display(Name = "Visit status")]
         public Status VisitStatus { get; set; }
+
         public string Diagnosis { get; set; }
         public string Procedure { get; set; }
+
         [ForeignKey("DentistId")]
         public int DentistId { get; set; }
+
         [ForeignKey("PatientId")]
         public int PatientId { get; set; }
     }

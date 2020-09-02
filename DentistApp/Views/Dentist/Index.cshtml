@@ -1,0 +1,43 @@
+﻿@model DentistApp.Application.ViewModels.DentistListVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>All dentists</h1>
+
+@if (signInManager.IsSignedIn(User) && User.IsInRole("Admin")) { 
+    <p>
+        <a class="btn btn-outline-primary" asp-action="Create">Create New</a>
+    </p>
+    }
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Dentist</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Dentists)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id })*@
+                    </td>
+            </tr>
+        }
+    </tbody>
+</table>
