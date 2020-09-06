@@ -19,12 +19,12 @@
         <div class="row align-items-end">
             <div class="form-group col-auto">
                 <label asp-for="DateMin" class="control-label"></label>
-                <input type="date" name="dateMin" asp-for="DateMin" class="form-control" max="@DateTime.Now.AddYears(5).ToString("yyyy-MM-dd")" />
+                <input type="date" name="dateMin" asp-for="DateMin" class="form-control" />
                 <span asp-validation-for="DateMin" class="text-danger"></span>
             </div>
             <div class="form-group col-auto">
                 <label asp-for="DateMax" class="control-label"></label>
-                <input type="date" name="dateMax" asp-for="DateMax" class="form-control" max="@DateTime.Now.AddYears(5).ToString("yyyy-MM-dd")" />
+                <input type="date" name="dateMax" asp-for="DateMax" class="form-control"  />
                 <span asp-validation-for="DateMax" class="text-danger"></span>
             </div>
             <div class="form-group col-auto">
@@ -88,7 +88,6 @@
         <h4 class="border border-primary p-3 text-center" style="background-color:whitesmoke; color:cornflowerblue">
             @{ var day = d.ToString("dd MMMM yyyy");
                 @Html.DisplayFor(modelItem => day)}
-            @*@Html.DisplayFor(model => d)*@
         </h4>
         <table class="table">
             <thead>
@@ -108,12 +107,10 @@
                     <th class="col" style="width:25%"></th>
                 </tr>
             </thead>
-            @*</table>*@
             @foreach (var v in Model.Visits)
             {
                 if (v.VisitDate.Date == d.Date)
                 {
-                    @*<table class="table " >*@
                     <tbody>
                         <tr>
                             <td>
@@ -124,16 +121,12 @@
                                 @Html.DisplayFor(modelItem => v.VisitStatus)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => v.Patient.FullName) @*@Html.DisplayFor(modelItem => item.PatientLastName)*@
+                                @Html.DisplayFor(modelItem => v.Patient.FullName) 
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => v.Dentist.FullName) @*@Html.DisplayFor(modelItem => item.DentistLastName)*@
+                                @Html.DisplayFor(modelItem => v.Dentist.FullName) 
                             </td>
                             <td>
-                                @*@Html.ActionLink("Edit", "Edit", new { id = v.Id }) |
-                                    @Html.ActionLink("Details", "Details", new { id = v.Id }) |
-                                    @Html.ActionLink("Cancel", "Cancel", new { id = v.Id })*@
-
                                 <a class="btn btn-primary" asp-action="Details" asp-route-id="@v.Id">Details</a>
                                 @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Secretary")))
                                 {<a class="btn btn-primary" asp-action="Edit" asp-route-id="@v.Id">Edit</a>
@@ -154,8 +147,6 @@
     @{
         var prevDisabled = !Model.PaginatedDates.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.PaginatedDates.HasNextPage ? "disabled" : "";
-        //var next = @Model.PaginatedDates.PageIndex + 1;
-        //var previous = @Model.PaginatedDates.PageIndex - 1;
 
 
         <div>
@@ -184,56 +175,3 @@
             </a>
         </div>
     }
-
-
-    @*<table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Date
-                    </th>
-                    <th>
-                        Time
-                    </th>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        Patient
-                    </th>
-                    <th>
-                        Dentist
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Visits)
-                {
-                    <tr>
-                        <td>
-                            @{ var date = item.VisitDate.ToString("dd/MM/yyyy");
-                                @Html.DisplayFor(modelItem => date)}
-                        </td>
-                        <td>
-                            @{ var timeofday = item.VisitDate.ToString("HH:mm");
-                                @Html.DisplayFor(modelItem => timeofday)}
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.VisitStatus)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PatientFullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DentistFullName)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>*@

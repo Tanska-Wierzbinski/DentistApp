@@ -23,8 +23,7 @@ namespace DentistApp.Application.ViewModels
         public DentistBasicInfoVM Dentist { get; set; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, VisitInfoForPatientCardVM>()//.ForMember(v=>v.Dentist.Id, opt=>opt.MapFrom(s=>s.DentistId))
-                .ReverseMap();
+            profile.CreateMap<Visit, VisitInfoForPatientCardVM>().ReverseMap();
 
         }
     }

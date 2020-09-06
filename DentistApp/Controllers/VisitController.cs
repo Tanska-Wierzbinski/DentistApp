@@ -94,12 +94,6 @@ namespace DentistApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //// GET: VisitController/AddOrEditDiagnosisAndProcedure/5
-        //public ActionResult AddOrEditDiagnosisAndProcedure(int visitId)
-        //{
-        //    return View(_service.GetVisitDetails(visitId));
-        //}
-
         // POST: VisitController/Edit/5
         [HttpPost]
         [AllowAnonymous]

@@ -37,16 +37,6 @@
     <hr>
     <p class="mb-0"></p>
 </div>
-
-@*@{var availableVisits = Model.AvailableVisits.Any() ? "display:none" : ""; }
-
-<div class="alert alert-danger" style="@availableVisits" role="alert">
-    <h4 class="alert-heading">Ajjjj karamba!</h4>
-    <p>No available visits.</p>
-    <hr>
-    <p class="mb-0"></p>
-</div>*@
-
 <p></p>
 <div class="row">
     <div class="col-md-4">
@@ -80,10 +70,6 @@
         </form>
     </div>
 </div>
-
-@*<div>
-        <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
-    </div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

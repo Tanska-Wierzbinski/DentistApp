@@ -9,7 +9,6 @@ namespace DentistApp.Application.ViewModels
     public class VisitInfoForIndexListVM
     {
         public List<VisitInfoForIndexVM> Visits { get; set; }
-        //public List<DateTime> Dates { get; set; }
         public PaginatedList<DateTime> PaginatedDates { get; set; }
         public DateTime DateMin { get; set; }
         public DateTime DateMax { get; set; }

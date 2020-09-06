@@ -32,9 +32,7 @@ namespace DentistApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-             profile.CreateMap<Visit, VisitInfoForIndexVM>()//.ForMember(d => d.Patient.Id, opt => opt.MapFrom(s=>s.PatientId))
-                                                            //.ForMember(d => d.Dentist.Id, opt => opt.MapFrom(s => s.DentistId))
-                                                            .ReverseMap();
+             profile.CreateMap<Visit, VisitInfoForIndexVM>().ReverseMap();
 
         }
     }

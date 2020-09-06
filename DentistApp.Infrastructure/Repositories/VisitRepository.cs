@@ -32,7 +32,6 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Visit> GetAll()
         {
-            //return _context.Visits.Include(p=>p.Patient).Include(d=>d.Dentist);
             return _context.Visits.AsNoTracking();
         }
 
@@ -41,27 +40,14 @@ namespace DentistApp.Infrastructure.Repositories
             return _context.Visits.SingleOrDefault(v => v.Id == visitId);
         }
 
-        //public Visit GetByIdForCancel(int visitId)
-        //{
-        //    //return _context.Visits.Include(p => p.Patient).SingleOrDefault(v => v.Id == visitId);
-        //    return _context.Visits.SingleOrDefault(v => v.Id == visitId);
-        //}
-
-        //public Visit GetByIdWithDentistAndPatient(int visitId)
-        //{
-
-        //    //return _context.Visits.Include(p => p.Patient).Include(d => d.Dentist).SingleOrDefault(v => v.Id == visitId);
-
-        //    return _context.Visits.SingleOrDefault(v => v.Id == visitId);
-        //}
 
         public IQueryable<Visit> GetForDate(DateTime date)
         {
-            return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date));//.Include(p => p.Patient);//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
+            return _context.Visits.Where(v => v.VisitDate.Date.Equals(date.Date));
         }
         public IQueryable<Visit> GetForDateTime(DateTime date)
         {
-            return _context.Visits.Where(v => v.VisitDate.Equals(date));//.ThenInclude(p => p.LastName);// .Include(p=>p.Patient.LastName);
+            return _context.Visits.Where(v => v.VisitDate.Equals(date));
         }
 
         public IQueryable<Visit> GetForDentist(int dentistId)
@@ -71,7 +57,6 @@ namespace DentistApp.Infrastructure.Repositories
 
         public IQueryable<Visit> GetForPatient(int patientId)
         {
-            //return _context.Visits.Where(v => v.PatientId == patientId).Include(d=>d.Dentist);
             return _context.Visits.Where(v => v.PatientId == patientId);
         }
 

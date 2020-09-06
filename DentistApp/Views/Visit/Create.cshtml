@@ -32,7 +32,7 @@
 @{var displayMessage = String.IsNullOrEmpty(@ViewBag.Message) ? "display:none" : ""; }
 
 
-@*<div class=" border  rounded-lg " style="@displayMessage"><h3 class="m-2" style="color:darkred">@ViewBag.Message</h3>  </div>*@
+
 <div class="alert alert-danger" style="@displayMessage" role="alert">
     <h4 class="alert-heading">Ajjjj karamba!</h4>
     <p>@ViewBag.Message</p>
@@ -74,9 +74,6 @@
     </div>
 </div>
 
-@*<div>
-    <a asp-action="Index">Back to List</a>
-</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

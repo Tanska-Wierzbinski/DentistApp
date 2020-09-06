@@ -7,31 +7,6 @@
 <h1>Add or edit diagnosis and procedure</h1>
 
 <hr />
-<!--<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddOrEditDiagnosisAndProcedure">-->
-@*<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Id" class="control-label"></label>*@
-
-@*<span asp-validation-for="Id" class="text-danger"></span>
-    </div>*@
-<!--<div class="form-group">
-                <label asp-for="Diagnosis" class="control-label"></label>
-                <input asp-for="Diagnosis" class="form-control" />
-                <span asp-validation-for="Diagnosis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Procedure" class="control-label"></label>
-                <input asp-for="Procedure" class="form-control" />
-                <span asp-validation-for="Procedure" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>-->
 
 <form asp-action="AddOrEditDiagnosisAndProcedure">
     <input type="hidden" asp-for="Dentist.Id" />
@@ -64,38 +39,6 @@
             </div>
         </div>
 
-        @*<div class="col" style="display:flex; flex-direction:row;flex-wrap:wrap;flex-grow:2">
-            <div class="border border-primary rounded mr-3">
-                <div class="rounded" style="height:30%;">
-                   <textarea asp-for="Diagnosis" class="form-control" style="background-color:lightgray">Diagnosis</textarea>
-                </div>
-                <div class="rounded" style="height:55%">
-                    <textarea asp-for="Procedure" class="form-control" style="background-color: lightgray"></textarea>
-                </div>
-                <div class="form-group mt-2">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </div>
-        </div>*@
-
-        @*<div class="col" style="display:flex; flex-direction:row;flex-wrap:wrap;flex-grow:2">
-            <div class="border border-primary rounded mr-3">
-                <div class="input-group input-group-lg" style="height:30%">
-                    <div class="input-group-prepend" style="width:30%;">
-                        <span class="input-group-text" id="inputGroup-sizing-lg" style="background-color:whitesmoke">diagnosis</span>
-                    </div><textarea asp-for="Diagnosis" class="form-control" style="background-color:whitesmoke"></textarea>
-                </div>
-                <div class="input-group input-group-lg" style="height:55%">
-                    <div class="input-group-prepend" style="width:30%;background-color:white">
-                        <span class="input-group-text" id="inputGroup-sizing-lg" style="background-color:white">procedure</span>
-                    </div>
-                    <textarea asp-for="Procedure" class="form-control"></textarea>
-                </div>
-                <div class="form-group mt-2">
-                    <input type="submit" value="Save" class="btn btn-outline-primary" />
-                </div>
-            </div>
-        </div>*@
 
         <div class="card border-primary mr-3 " style="width: 60%;">
             <div class="card-header"><h4><text style="color:gray">diagnosis </text>  <textarea asp-for="Diagnosis" class="form-control" style="background-color:whitesmoke;border:none;outline:none;box-shadow:none"></textarea></h4></div>
@@ -103,7 +46,6 @@
                 <h4><text style="color:gray">procedure </text><textarea asp-for="Procedure" class="form-control" style="border:hidden;outline:none;box-shadow:none"></textarea></h4>
             </div>
             <div class="card-footer">
-                @*<a class="btn btn-outline-primary" asp-action="AddOrEditDiagnosisAndProcedure" asp-route-visitId="@Model.Id">Add or Edit</a>*@
                 <input type="submit" value="Save" class="btn btn-outline-primary" />
             </div>
         </div>

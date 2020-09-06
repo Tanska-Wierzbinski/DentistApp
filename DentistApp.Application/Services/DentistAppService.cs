@@ -32,14 +32,14 @@ namespace DentistApp.Application.Services
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-        //naprawione
+
         public VisitInfoForCancelVM Cancel_Get(int visitId)
         {
             var visit = _mapper.Map<VisitInfoForCancelVM>(_visitRepository.GetById(visitId));
             visit.Patient = _mapper.Map<PatientBasicInfoVM>(_patientRepository.GetById(visit.PatientId));
             return visit;
         }
-        //
+
         public async Task Cancel_Post(int visitId)
         {
             var visit = _visitRepository.GetById(visitId);
@@ -47,7 +47,7 @@ namespace DentistApp.Application.Services
             await _visitRepository.Update(visit);
 
         }
-        //naprawione
+
         public PatientInfoForIndexListVM GetAllPatient()
         {
             var patients = _patientRepository.GetAll().ProjectTo<PatientInfoForIndexVM>(_mapper.ConfigurationProvider).ToList();
@@ -63,7 +63,7 @@ namespace DentistApp.Application.Services
                 Patients = patients
             };
         }
-        //naprawione
+
         public async Task<VisitForDateListVM> GetVisitsForDate(DateTime date)
         {
             var visits = _visitRepository.GetForDate(date).OrderBy(v => v.VisitDate.TimeOfDay)
@@ -95,7 +95,7 @@ namespace DentistApp.Application.Services
                 CurrentDate = DateTime.Now.Date
             };
         }
-        //naprawione
+
         public async Task<VisitInfoForIndexListVM> GetAllVisits(string sortOrder, int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture)
         {
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "" : sortOrder;
@@ -118,11 +118,11 @@ namespace DentistApp.Application.Services
             }
             if (dateMax.HasValue && dateMin.HasValue)
             {
-                temporaryVisits = dateMin < dateMax ? temporaryVisits.Where(v => v.VisitDate >= dateMin && v.VisitDate < dateMax) :
-                                             temporaryVisits.Where(v => v.VisitDate >= dateMax && v.VisitDate < dateMin);
+                temporaryVisits = dateMin < dateMax ? temporaryVisits.Where(v => v.VisitDate >= dateMin && v.VisitDate <= dateMax.Value.AddDays(1)) :
+                                             temporaryVisits.Where(v => v.VisitDate >= dateMax && v.VisitDate <= dateMin.Value.AddDays(1));
 
             }
-            else if (dateMax.HasValue) temporaryVisits = temporaryVisits.Where(v => v.VisitDate < dateMax);
+            else if (dateMax.HasValue) temporaryVisits = temporaryVisits.Where(v => v.VisitDate <= dateMax.Value.AddDays(1));
             else if (dateMin.HasValue) temporaryVisits = temporaryVisits.Where(v => v.VisitDate >= dateMin);
 
             if (dentistId.HasValue && dentistId.Value != 0)
@@ -171,7 +171,7 @@ namespace DentistApp.Application.Services
 
             };
         }
-        //naprawione
+
         public PatientCardVM GetPatientCard(int patientId)
         {
             var patient = _mapper.Map<PatientInfoForPatientCardVM>(_patientRepository.GetById(patientId));
@@ -187,7 +187,7 @@ namespace DentistApp.Application.Services
                 Visits = visits.ToList()
             };
         }
-        //naprawione
+
         public TemporaryVisitVM AddVisit_Get(DateTime? date, int? dentistId)
         {
             if (date == null)
@@ -213,7 +213,7 @@ namespace DentistApp.Application.Services
                 DentistId = dentistId.GetValueOrDefault(0)
             };
         }
-        //naprawione
+
         public async Task<int> AddVisit_Post(TemporaryVisitVM newVisit)
         {
             newVisit.VisitDate = newVisit.VisitDate + newVisit.TimeOfVisit;
@@ -249,7 +249,7 @@ namespace DentistApp.Application.Services
             await _visitRepository.Add(visit);
             return 0;
         }
-        //naprawione
+
         public TemporaryVisitVM EditVisit_Get(DateTime? date, int? dentistId, int visitId)
         {
             var result = _visitRepository.GetById(visitId);
@@ -275,15 +275,14 @@ namespace DentistApp.Application.Services
             {
                 Id = result.Id,
                 Dentists = dent,
-                Patients = patients.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList(),//patients.ToList(),
-                //BookedVisits = bookedVisits,
+                Patients = patients.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList(),
                 AvailableVisits = availableVisits,
                 VisitDate = date.Value,
                 DentistId = dentistId.GetValueOrDefault(0),
                 PatientId = result.PatientId
             };
         }
-        //naprawoine
+
         public async Task<int> EditVisit_Post(TemporaryVisitVM editedVisit)
         {
             editedVisit.VisitDate = editedVisit.VisitDate + editedVisit.TimeOfVisit;
@@ -319,17 +318,15 @@ namespace DentistApp.Application.Services
             await _visitRepository.Update(visit);
             return 0;
         }
-        //naprawione
+
         public PatientForEditVM EditPatient_Get(int patientId)
         {
             var patient = _mapper.Map<PatientForEditVM>(_patientRepository.GetById(patientId));
             patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
-            //var address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
 
-            //patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId)); ;
             return patient;
         }
-        //naprawione
+
         public async Task EditPatient_Post(PatientForEditVM editedPatient)
         {
             var patient = _mapper.Map<Patient>(editedPatient);
@@ -338,10 +335,8 @@ namespace DentistApp.Application.Services
             await _addressRepository.Update(address);
             await _patientRepository.Update(patient);
 
-            //var address = _mapper.Map<Address>(editedPatient.Address);
-            //await _addressRepository.Update(address);
         }
-        //naprawione
+
         private void CheckForAvailableVisits(IQueryable<DentistBasicInfoVM> dentists, IQueryable<PatientBasicInfoVM> patients, List<DateTime> bookedVisits, List<TimeSpan> availableVisits, DateTime date, int? dentistId)
         {
             for (TimeSpan i = new TimeSpan(8, 0, 0); i <= new TimeSpan(15, 30, 0); i += new TimeSpan(0, 30, 0))
@@ -376,7 +371,7 @@ namespace DentistApp.Application.Services
                 }
             }
         }
-        //naprawone
+
         public VisitInfoForDetailsVM GetVisitDetails(int visitId)
         {
             var visit = _mapper.Map<VisitInfoForDetailsVM>(_visitRepository.GetById(visitId));
@@ -385,7 +380,7 @@ namespace DentistApp.Application.Services
 
             return visit;
         }
-        //naprawione
+
         public async Task AddOrEditDiagnosisAndProcedure(VisitInfoForDetailsVM visit)
         {
             var result = _mapper.Map<Visit>(visit);
@@ -412,7 +407,6 @@ namespace DentistApp.Application.Services
             {
                 Dentists = dent,
                 PatientId = newPatient.Id,
-                //Patients = patients.Select(s => new SelectListItem { Text = s.Name + " " + s.LastName, Value = s.Id.ToString() }).ToList(),
                 AvailableVisits = availableVisits,
                 VisitDate = date.Value,
                 DentistId = dentistId.GetValueOrDefault(0)
@@ -421,7 +415,6 @@ namespace DentistApp.Application.Services
             return new FirstVisitVM()
             {
                 Patient = newPatient,
-                //Address = patient.Address,
                 Visit = visit
             };
         }

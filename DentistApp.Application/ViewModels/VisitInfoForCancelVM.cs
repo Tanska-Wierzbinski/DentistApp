@@ -25,8 +25,7 @@ namespace DentistApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Visit, VisitInfoForCancelVM>()//.ForMember(p=>p.Patient.Id, opt=>opt.MapFrom(s=>s.PatientId))
-                .ReverseMap();
+            profile.CreateMap<Visit, VisitInfoForCancelVM>().ReverseMap();
         }
     }
 }
