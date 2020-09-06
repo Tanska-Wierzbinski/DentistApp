@@ -542,5 +542,13 @@ namespace DentistApp.Application.Services
                 AvailableEmails = availableEmails.Select(s => new SelectListItem { Text = s, Value=s }).ToList()
             };
         }
+
+        public void Dispose()
+        {
+            _addressRepository?.Dispose();
+            _dentistRepository?.Dispose();
+            _patientRepository?.Dispose();
+            _visitRepository?.Dispose();
+        }
     }
 }

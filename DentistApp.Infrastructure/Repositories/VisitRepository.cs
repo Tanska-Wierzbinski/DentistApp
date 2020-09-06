@@ -67,5 +67,10 @@ namespace DentistApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
             
         }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
     }
 }
