@@ -25,5 +25,7 @@ The "Dentist" tab lists all dentists.
 When adding a visit, the current date and any dentist are selected by default. Selecting a date and/or dentist will display the available times for the selected options. The available times ensure that a visit is made at a given time and that the dentist may have one visit at a time.
 
 After selecting the patient, it is checked whether the patient has a different visit scheduled for the selected date and time. If so, an appropriate message is displayed.
+![Adding visit](/Images/addvisit.PNG)
 
 The application provides users with three roles: Dentist, Secretary and Admin. The Secretary can add new patients and visits, edit patients and visits. The Dentist can add and edit details (diagnoses, procedures) only in his visits. Admin can manage roles, add and edit visits or patients but cannot add or edit diagnoses and procedures.
+![Roles](/Images/roles.PNG)
