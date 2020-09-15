@@ -60,7 +60,7 @@
     </div>
 
 
-    <div class="card border-primary mr-3" style="max-width: 30rem;">
+    <div class="card border-primary mr-3" style="max-width: 40rem;">
         <div class="card-header"><h4>History of visits</h4></div>
         <div class="card-body text-primary">
             <table class="table">
@@ -93,7 +93,7 @@
                                     @Html.DisplayFor(modelItem => item.VisitStatus)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Dentist)
+                                    @Html.DisplayFor(modelItem => item.Dentist.FullName)
                                 </td>
                                 <td>
                                     <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@item.Id">Details</a>
