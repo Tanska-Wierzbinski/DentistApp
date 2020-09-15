@@ -20,70 +20,78 @@
         <div class="col">
             <a class="btn btn-outline-primary" asp-controller="Visit" asp-action="FirstVisit">Add first visit</a>
         </div>
-</div>
+    </div>
 }
 
 <div class="border border-primary m-0 p-3 row" style="background-color:whitesmoke; color:cornflowerblue; justify-content:space-between;">
     <div class="col-auto">
-        @{ var day = Model.CurrentDate.ToString("dd MMMM yyyy");
-            <h4 class="float-left">@Html.DisplayFor(modelItem => day)</h4>}
+        @{ var day = Model.CurrentDate.ToString("dd MMMM yyyy"); }
+            <h4 class="float-left">@Html.DisplayFor(modelItem => day)</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-center">Number of visits: @Html.DisplayFor(modelItem => Model.Count)</h4>
+        </div>
+        <div class="col-auto">
+            <h4 class="text-right">Number of done visits: @Html.DisplayFor(modelItem => Model.DoneVisits)</h4>
+        </div>
     </div>
-    <div class="col">
-        <h4 class="text-center">Number of visits: @Html.DisplayFor(modelItem => Model.Count)</h4>
-    </div>
-    <div class="col-auto">
-        <h4 class="text-right">Number of done visits: @Html.DisplayFor(modelItem => Model.DoneVisits)</h4>
-    </div>
-</div>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th class="col" style="width:10%">
-                Time
-            </th>
-            <th class="col" style="width:15%">
-                Status
-            </th>
-            <th class="col" style="width:25%">
-                Patient
-            </th>
-            <th class="col" style="width:25%">
-                Dentist
-            </th>
-            <th class="col" style="width:25%"></th>
-        </tr>
-    </thead>
-
-    @foreach (var v in Model.Visits)
-    {
-        <tbody>
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @{ var timeofday = v.VisitDate.ToString("HH:mm");
-                        @Html.DisplayFor(modelItem => timeofday)}
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => v.VisitStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => v.Patient.FullName) 
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => v.Dentist.FullName)
-                </td>
-                <td>
-                    <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@v.Id">Details</a>
-                    @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Secretary")))
-                    {<a class="btn btn-primary" asp-action="Edit" asp-controller="Visit" asp-route-id="@v.Id">Edit</a>
-                        var isAvailable = (v.VisitDate < DateTime.Now) || (v.VisitStatus.ToString() == "Canceled") ? "display:none" : "";
-
-                        <a style="@isAvailable" class="btn btn-primary" asp-action="Cancel" asp-controller="Visit" asp-route-id="@v.Id">Cancel</a>}
-
-                </td>
+                <th class="col" style="width:10%">
+                    Time
+                </th>
+                <th class="col" style="width:15%">
+                    Status
+                </th>
+                <th class="col" style="width:25%">
+                    Patient
+                </th>
+                <th class="col" style="width:25%">
+                    Dentist
+                </th>
+                <th class="col" style="width:25%"></th>
             </tr>
-        </tbody>
-    }
+        </thead>
 
-</table>
+        @foreach (var v in Model.Visits)
+        {
+            <tbody>
+
+                @{var isInProgress = v.VisitStatus.ToString() == "InProgress" ? "whitesmoke" : ""; }
+                <tr style="background-color:@isInProgress">
+                    <td>
+                        @{ var timeofday = v.VisitDate.ToString("HH:mm");
+                        @Html.DisplayFor(modelItem => timeofday)}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.VisitStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.Patient.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => v.Dentist.FullName)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Visit" asp-action="Details" asp-route-id="@v.Id">Details</a>
+                        @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Secretary")))
+                        {<a class="btn btn-primary" asp-action="Edit" asp-controller="Visit" asp-route-id="@v.Id">Edit</a>
+                            var isAvailable = (v.VisitDate < DateTime.Now) || (v.VisitStatus.ToString() == "Canceled") ? "display:none" : "";
+
+                            <a style="@isAvailable" class="btn btn-primary" asp-action="Cancel" asp-controller="Visit" asp-route-id="@v.Id">Cancel</a>}
+
+                    </td>
+                </tr>
+            </tbody>
+        }
+
+    </table>
+
+    <script language="javascript">
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 30000);
+    </script>

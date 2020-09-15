@@ -176,7 +176,7 @@ namespace DentistApp.Application.Services
         {
             var patient = _mapper.Map<PatientInfoForPatientCardVM>(_patientRepository.GetById(patientId));
             patient.Address = _mapper.Map<AddressVM>(_addressRepository.GetById(patientId));
-            var visits = _visitRepository.GetForPatient(patientId).OrderBy(v => v.VisitDate.Date).ThenBy(v => v.VisitDate.TimeOfDay).ProjectTo<VisitInfoForPatientCardVM>(_mapper.ConfigurationProvider);
+            var visits = _visitRepository.GetForPatient(patientId).OrderBy(v => v.VisitDate.Date).ThenBy(v => v.VisitDate.TimeOfDay).ProjectTo<VisitInfoForPatientCardVM>(_mapper.ConfigurationProvider).ToList();
             foreach (var visit in visits)
             {
                 visit.Dentist = _mapper.Map<DentistBasicInfoVM>(_dentistRepository.GetById(visit.DentistId));
@@ -184,7 +184,7 @@ namespace DentistApp.Application.Services
             return new PatientCardVM()
             {
                 Patient = patient,
-                Visits = visits.ToList()
+                Visits = visits
             };
         }
 
@@ -334,7 +334,6 @@ namespace DentistApp.Application.Services
             address.PatientId = patient.Id;
             await _addressRepository.Update(address);
             await _patientRepository.Update(patient);
-
         }
 
         private void CheckForAvailableVisits(IQueryable<DentistBasicInfoVM> dentists, IQueryable<PatientBasicInfoVM> patients, List<DateTime> bookedVisits, List<TimeSpan> availableVisits, DateTime date, int? dentistId)
@@ -541,6 +540,14 @@ namespace DentistApp.Application.Services
             {
                 AvailableEmails = availableEmails.Select(s => new SelectListItem { Text = s, Value=s }).ToList()
             };
+        }
+
+        public void Dispose()
+        {
+            _addressRepository?.Dispose();
+            _dentistRepository?.Dispose();
+            _patientRepository?.Dispose();
+            _visitRepository?.Dispose();
         }
     }
 }

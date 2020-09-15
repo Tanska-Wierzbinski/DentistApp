@@ -1,5 +1,4 @@
-﻿
-using DentistApp.Application.ViewModels;
+﻿using DentistApp.Application.ViewModels;
 using DentistApp.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DentistApp.Application.Interfaces
 {
-    public interface IDentistAppService
+    public interface IDentistAppService : IDisposable
     {
         Task<VisitForDateListVM> GetVisitsForDate(DateTime date);
         Task<VisitInfoForIndexListVM> GetAllVisits(string sortOrder,int? pageNumber, DateTime? dateMin, DateTime? dateMax, int? dentistId, bool? inFuture);

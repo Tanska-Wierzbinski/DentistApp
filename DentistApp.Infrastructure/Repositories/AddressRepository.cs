@@ -40,5 +40,10 @@ namespace DentistApp.Infrastructure.Repositories
             _context.Addresses.Update(address);
             await _context.SaveChangesAsync();
         }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
     }
 }

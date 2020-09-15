@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DentistApp.Domain.Interfaces
 {
-    public interface IAddressRepository
+    public interface IAddressRepository :IDisposable
     {
         Address GetById(int addressId);
         Task Add(Address address);

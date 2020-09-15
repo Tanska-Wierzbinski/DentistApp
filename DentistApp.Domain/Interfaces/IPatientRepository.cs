@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DentistApp.Domain.Interfaces
 {
-    public interface IPatientRepository
+    public interface IPatientRepository : IDisposable
     {
         IQueryable<Patient> GetAll();
         Patient GetById(int patientId);

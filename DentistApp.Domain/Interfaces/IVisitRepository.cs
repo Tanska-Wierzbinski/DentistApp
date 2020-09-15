@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DentistApp.Domain.Interfaces
 {
-    public interface IVisitRepository
+    public interface IVisitRepository : IDisposable
     {
         IQueryable<Visit> GetAll();
         IQueryable<Visit> GetForDate(DateTime date);
