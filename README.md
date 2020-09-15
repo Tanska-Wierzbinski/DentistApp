@@ -8,11 +8,18 @@ The home page contains scheduled visits for the current day and allows you to ad
 ![Home page](/Images/home.PNG)
 
 All visits are listed in the "Visits" tab. There you can filter visits by date, dentist and/or view only future visits. This tab uses the paging mechanism, displaying visits from the next two days on one page.
+!["Visits" tab](/Images/visits.PNG)
 
-The "Patients" tab lists all registered patients. Each patient has his own Patient Card. The Patient Card has detailed information about the patient: personal data, address and visit history. In the history of the patient's visits, you can check the details of a given visit, such as diagnosis and procedure.
+The "Patients" tab lists all registered patients. Each patient has his own Patient Card. 
+!["Patients" tab](/Images/patients.PNG)
+The Patient Card has detailed information about the patient: personal data, address and visit history. 
+!["Patient Card"](/Images/patientcard.PNG)
+In the history of the patient's visits, you can check the details of a given visit, such as diagnosis and procedure.
+![Details of visit](/Images/visitdetails.PNG)
 
 The "Dentist" tab lists all dentists.
-
+!["Dentists" tab](/Images/dentists.PNG)
+![Details of dentist](/Images/dentistdetails.PNG)
  
  
 When adding a visit, the current date and any dentist are selected by default. Selecting a date and/or dentist will display the available times for the selected options. The available times ensure that a visit is made at a given time and that the dentist may have one visit at a time.
