@@ -4,7 +4,8 @@ Views uses Bootstrap, migrations and the database were created using Entity Fram
 
 
 DentistApp is an application designed to manage visits to a dental clinic. 
-The main page contains scheduled visits for the current day and allows you to add a new visit, new patient or first visit. Each row in the table contains basic information about the visit: time, status, patient, dentist. 
+The home page contains scheduled visits for the current day and allows you to add a new visit, new patient or first visit. Each row in the table contains basic information about the visit: time, status, patient, dentist. 
+![Home page](/Images/home.PNG)
 
 All visits are listed in the "Visits" tab. There you can filter visits by date, dentist and/or view only future visits. This tab uses the paging mechanism, displaying visits from the next two days on one page.
 
